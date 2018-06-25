@@ -1,0 +1,11 @@
+node_modules/
+.vscode/
+yarn-error.log
+npm-debug.log
+alias.sh
+
+src/common/src/config/db.js
+src/common/src/config/mail.js
+
+deploy/roles/backend/files/
+deploy/roles/frontend/files/

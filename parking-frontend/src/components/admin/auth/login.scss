@@ -1,0 +1,134 @@
+@import '../../../assets/scss/_variables.scss';
+
+$textColor: #99abb4;
+
+.app-login.application.theme--light {
+  background-image: url(../../../assets/images/bg.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+
+  .application--wrap {
+    background-color: rgba(245, 245, 245, 0.8);
+  }
+
+  .logo-app {
+    width: 280px;
+    height: 60px;
+    margin: 0 auto 20px;
+    // background: transparent url(../../../assets/images/logo.png) no-repeat;
+    background-size: 100%;
+  }
+
+  main {
+    padding-top: 0;
+
+    &.content {
+      background-color: transparent;
+    }
+  }
+
+  .login-container {
+    width: 100%;
+    max-width: 380px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .login-form {
+    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.1);
+    border-top: 5px solid $primary;
+
+    form > .card__title:not(:last-child) {
+      padding-bottom: 0;
+    }
+
+    form > .card__title:last-child {
+      margin-top: 20px;
+
+      a {
+        color: white;
+        display: inline-block;
+        margin: 0 auto;
+        text-transform: uppercase;
+        font-size: 1rem;
+        line-height: 1rem;
+      }
+    }
+
+    h4 {
+      line-height: 1.4rem;
+      padding: 0 5px;
+      color: $primary;
+    }
+
+    .fluid {
+      padding: 5px 5px 0;
+    }
+
+    .card__title {
+      color: darken($textColor, 20%);
+      font-size: 0.95rem;
+
+      & > span {
+        margin-right: 5px;
+      }
+    }
+
+    .input-group.checkbox {
+      margin-top: -1px;
+      margin-left: -5px;
+      padding: 0;
+
+      label {
+        margin-top: -4px;
+        color: darken($textColor, 20%);
+      }
+      .input-group__details {
+        display: none;
+      }
+    }
+
+    .login-options {
+      padding-bottom: 7px;
+
+      a {
+        color: $textColor;
+        font-size: 0.95rem;
+
+        .icon {
+          font-size: 1.2rem;
+        }
+      }
+    }
+
+    a {
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+
+    }
+
+    .card__actions {
+      padding: 0 15px 20px;
+    }
+  }
+}
+
+.login-lang {
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  background-color: rgba(255, 255, 255, .6);
+
+  .btn {
+    margin: 0;
+    .btn__content {
+      color: #333;
+    }
+  }
+}
