@@ -97,11 +97,11 @@ let items = [
     ruta: 'vehiculos',
     orden: 12,
     estado: 'ACTIVO',
-    visible: true,
+    visible: false,
     id_modulo: 10
   },
   {
-    label: 'Movimientos',
+    label: 'Ingreso/Salida',
     ruta: 'movimientos',
     orden: 13,
     estado: 'ACTIVO',
@@ -109,7 +109,7 @@ let items = [
     id_modulo: 10
   },
   {
-    label: 'Pagos',
+    label: 'Pagos realizados',
     ruta: 'pagos',
     orden: 14,
     estado: 'ACTIVO',

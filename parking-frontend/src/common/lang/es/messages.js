@@ -7,7 +7,7 @@ export default {
   validate,
   menu,
   app: {
-    title: 'Base frotend',
+    title: 'Sistema Parking',
     account: 'Mi cuenta',
     settings: 'Configuración',
     logOut: 'Cerrar sesión'

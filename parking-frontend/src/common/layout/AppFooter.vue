@@ -6,7 +6,7 @@
     app
   >
     <v-spacer></v-spacer>
-    <div>&copy; Agetic {{ new Date().getFullYear() }}</div>
+    <div>&copy; omarmus {{ new Date().getFullYear() }}</div>
   </v-footer>
 </template>
 

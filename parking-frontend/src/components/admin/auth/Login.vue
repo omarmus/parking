@@ -53,7 +53,7 @@
               type="submit"
             >{{ $t('login.login') }}</v-btn>
           </v-card-actions>
-          <v-card-title>
+          <!-- <v-card-title>
             <v-container fluid>
               <v-layout row class="login-options">
                 <v-flex xs5>
@@ -69,7 +69,7 @@
           </v-card-title>
           <v-card-title class="info">
             <a href="">{{ $t('login.signUp') }}</a>
-          </v-card-title>
+          </v-card-title> -->
         </v-form>
       </v-card>
     </div>

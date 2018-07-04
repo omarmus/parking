@@ -16,6 +16,8 @@ module.exports = `
     fecha: Date
     # total
     total: Float
+    # gestión
+    gestion: Int
     # estado
     estado: EstadoPago
     # id_persona

@@ -12,10 +12,10 @@
     mini-variant-width="68"
   >
     <div class="app-logo">
-      <h1 class="app-title"><v-icon color="white">pets</v-icon><span>{{ $t('app.title') }}</span></h1>
+      <h1 class="app-title"><v-icon color="white">directions_car</v-icon><span>{{ $t('app.title') }}</span></h1>
     </div>
     <v-list id="sidenav-menu">
-      <v-list-tile
+      <!-- <v-list-tile
         @click="send('')"
         data-url="/"
       >
@@ -25,7 +25,7 @@
         <v-list-tile-content>
           <v-list-tile-title>Inicio</v-list-tile-title>
         </v-list-tile-content>
-      </v-list-tile>
+      </v-list-tile> -->
       <v-list-group
         v-model="item.active"
         v-for="item in menu"

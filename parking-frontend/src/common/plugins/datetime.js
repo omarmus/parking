@@ -193,6 +193,7 @@ export default {
       timeLiteral (time, txt) {
         let text = '';
         if (typeof time === 'number') {
+          console.log('time number', time);
           if (time === 0) {
             return '';
           }
@@ -201,7 +202,13 @@ export default {
           } else if (time < 3600) {
             text = Math.floor(time / 60) + 'm ' + (time % 60 > 0 ? (time % 60 + 's') : '');
           } else {
-            text = Math.floor(time / 3600) + 'h ' + (time % 3600 > 0 ? (Math.floor(time % 60) + 'm ') : '') + (time % 60 > 0 ? (time % 60 + 's') : '');
+            let hora = Math.floor(time / 3600) + 'h ';
+            let minutos = '';
+            if (time % 3600 > 0) {
+              time = time % 3600;
+              minutos = Math.floor(time / 60) + 'm ';
+            }
+            text = hora + minutos;
           }
           return (txt || '') + text;
         } else {

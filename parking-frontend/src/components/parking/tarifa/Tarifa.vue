@@ -91,7 +91,7 @@
           </template>
 
           <template slot="items" slot-scope="items">
-            <td class="nowrap">
+            <td class="nowrap" v-if="$store.state.user.id_rol !== 3">
               <v-tooltip bottom v-if="$store.state.permissions['tarifas:update']">
                 <v-btn
                   icon
@@ -111,7 +111,7 @@
                 <span>Eliminar registro</span>
               </v-tooltip>
             </td>
-            <td>
+            <td v-if="$store.state.user.id_rol !== 3">
               <v-tooltip bottom v-if="$store.state.permissions['tarifas:update']">
                 <v-switch
                   v-model="items.item.active"
@@ -146,6 +146,7 @@
 import CrudTable from '@/common/util/crud-table/CrudTable.vue';
 import crud from '@/common/util/crud-table/mixins/crud-table';
 import validate from '@/common/mixins/validate';
+import tarifa from './mixins/tarifa';
 
 const turnos = [
   'DIURNO',
@@ -153,9 +154,24 @@ const turnos = [
 ];
 
 export default {
-  mixins: [ crud, validate ],
+  mixins: [ crud, validate, tarifa ],
   created () {
     this.gestiones = this.getGestiones();
+    this.filters[0].items = this.getGestionesFilter(true);
+
+    this.headers = [
+      { text: 'Hora', value: 'minutos' },
+      { text: 'Minutos', value: 'minutos' },
+      { text: 'Precio', value: 'precio' },
+      { text: 'Turno', value: 'turno' },
+      { text: 'Gestión', value: 'gestion' },
+      { text: 'Estado', value: 'estado' }
+    ];
+
+    if (this.$store.state.user.id_rol !== 3) {
+      this.headers.unshift({ text: this.$t('common.actions'), sortable: false });
+      this.headers.unshift({ text: 'Activo', sortable: false });
+    }
   },
   data () {
     return {
@@ -163,16 +179,7 @@ export default {
       graphql: true, // Definiendo el CRUD con Graphql
       url: 'tarifas',
       gestiones: [],
-      headers: [
-        { text: this.$t('common.actions'), sortable: false },
-        { text: 'Activo', sortable: false },
-        { text: 'Hora', value: 'minutos' },
-        { text: 'Minutos', value: 'minutos' },
-        { text: 'Precio', value: 'precio' },
-        { text: 'Turno', value: 'turno' },
-        { text: 'Gestión', value: 'gestion' },
-        { text: 'Estado', value: 'estado' }
-      ],
+      headers: [],
       form: {
         minutos: '',
         precio: '',
@@ -187,7 +194,15 @@ export default {
         gestion
         estado
       `,
-      filters: [],
+      filters: [
+        {
+          field: 'gestion',
+          label: 'Gestión',
+          type: 'select',
+          typeG: 'Int',
+          items: []
+        }
+      ],
       valid: true
     };
   },

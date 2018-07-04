@@ -49,9 +49,19 @@ function addDays (date, days) {
   }
 }
 
+function formatTime (date) {
+  return [date.getHours(), date.getMinutes()].join(':');
+}
+
+function formatDate (date) {
+  return [date.getFullYear(), date.getMonth() + 1, date.getDate()].join('-');
+}
+
 module.exports = {
   diff,
   transformDate,
   transform,
-  addDays
+  addDays,
+  formatTime,
+  formatDate
 };

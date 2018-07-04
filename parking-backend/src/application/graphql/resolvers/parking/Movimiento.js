@@ -1,4 +1,5 @@
 'use strict';
+const { removeDots } = require('../../../lib/util');
 const { permissions } = require('../../../lib/auth');
 
 module.exports = function setupResolver (services) {
@@ -10,13 +11,13 @@ module.exports = function setupResolver (services) {
         permissions(context, 'movimientos:read');
 
         let items = await Movimiento.findAll(args, context.id_rol, context.id_movimiento);
-        return items.data;
+        return removeDots(items.data);
       },
       movimiento: async (_, args, context) => {
         permissions(context, 'movimientos:read');
 
         let item = await Movimiento.findById(args.id);
-        return item.data;
+        return removeDots(item.data);
       }
     },
     Mutation: {
@@ -25,7 +26,7 @@ module.exports = function setupResolver (services) {
 
         args.movimiento._user_created = context.id_usuario;
         let item = await Movimiento.createOrUpdate(args.movimiento);
-        return item.data;
+        return removeDots(item.data);
       },
       movimientoEdit: async (_, args, context) => {
         permissions(context, 'movimientos:update');
@@ -34,7 +35,7 @@ module.exports = function setupResolver (services) {
         args.movimiento._updated_at = new Date();
         args.movimiento.id = args.id;
         let item = await Movimiento.createOrUpdate(args.movimiento);
-        return item.data;
+        return removeDots(item.data);
       },
       movimientoDelete: async (_, args, context) => {
         permissions(context, 'movimientos:delete');

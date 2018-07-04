@@ -6,13 +6,6 @@ const util = require('../../lib/util');
 module.exports = (sequelize, DataTypes) => {
   let fields = {
     id: util.pk,
-    tipo: {
-      type: DataTypes.ENUM,
-      values: ['ENTRADA', 'SALIDA'],
-      defaultValue: 'ENTRADA',
-      allowNull: false,
-      xlabel: lang.t('fields.tipo')
-    },
     fecha_llegada: {
       type: DataTypes.DATE,
       allowNull: false,
@@ -33,12 +26,13 @@ module.exports = (sequelize, DataTypes) => {
     },
     llave: {
       type: DataTypes.BOOLEAN,
+      defaultValue: false,
       xlabel: lang.t('fields.llave')
     },
     estado: {
       type: DataTypes.ENUM,
-      values: ['ACTIVO', 'INACTIVO'],
-      defaultValue: 'ACTIVO',
+      values: ['INGRESO', 'SALIDA', 'PAGADO', 'FACTURADO', 'OBSERVADO'],
+      defaultValue: 'INGRESO',
       allowNull: false,
       xlabel: lang.t('fields.estado')
     }

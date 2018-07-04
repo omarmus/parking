@@ -1,9 +1,10 @@
 'use strict';
 
 const debug = require('debug')('app:service:pago');
+const { diff } = require('../../lib/time');
 
 module.exports = function pagoService (repositories, res) {
-  const { pagos } = repositories;
+  const { pagos, tarifas } = repositories;
 
   async function findAll (params = {}, idRol, idEntidad) {
     debug('Lista de pagos|filtros');
@@ -20,6 +21,28 @@ module.exports = function pagoService (repositories, res) {
     }
 
     return res.success(lista);
+  }
+
+  async function calcularTotal (horaInicio, horaSalida) {
+    debug('Calculando total', horaInicio, horaSalida);
+    let total = 0;
+    let minutos = diff(horaInicio, horaSalida);
+    console.log('MINUTOS TOTAL', minutos);
+    let gestion = new Date().getFullYear();
+    let items = await tarifas.findAll({ gestion, order: 'minutos', estado: 'ACTIVO', turno: 'DIURNO' });
+    items = items.rows;
+    console.log('items', items);
+    for (let i in items) {
+      console.log('ITEM', items[i]);
+      console.log('MINUTOS', items[i].minutos, 'PRECIO', items[i].precio);
+      if (minutos <= items[i].minutos) {
+        total = parseFloat(items[i].precio);
+        console.log('TOTAL!!!', total);
+        break;
+      }
+    }
+
+    return res.success({ total });
   }
 
   async function findById (id) {
@@ -44,6 +67,12 @@ module.exports = function pagoService (repositories, res) {
 
     let pago;
     try {
+      if (data.id) {
+        // Realizando el pago
+        data.fecha = new Date();
+        data.estado = 'PAGADO';
+        data.gestion = new Date().getFullYear();
+      }
       pago = await pagos.createOrUpdate(data);
     } catch (e) {
       return res.error(e);
@@ -81,6 +110,7 @@ module.exports = function pagoService (repositories, res) {
     findAll,
     findById,
     createOrUpdate,
-    deleteItem
+    deleteItem,
+    calcularTotal
   };
 };

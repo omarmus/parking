@@ -2,28 +2,470 @@
 
 const { setTimestampsSeeder } = require('../lib/util');
 
-let items = [];
-
-// Este bloque se debe reemplazar cuando se tengan los permisos definidos para cada módulo por rol
-const iniModules = 1;
-const nroModules = 14;
-const nroRoles = 3;
-
-for (let rol = 1; rol <= nroRoles; rol++) {
-  for (let modulo = iniModules; modulo <= nroModules; modulo++) {
-    items.push({
-      create: true,
-      read: true,
-      update: true,
-      delete: true,
-      firma: false,
-      csv: false,
-      activo: true,
-      id_modulo: modulo,
-      id_rol: rol
-    });
+let items = [
+  {
+    'create': true,
+    'read': true,
+    'update': true,
+    'delete': true,
+    'firma': false,
+    'csv': false,
+    'activo': true,
+    'id_modulo': 1,
+    'id_rol': 1
+  },
+  {
+    'create': true,
+    'read': true,
+    'update': true,
+    'delete': true,
+    'firma': false,
+    'csv': false,
+    'activo': true,
+    'id_modulo': 2,
+    'id_rol': 1
+  },
+  {
+    'create': true,
+    'read': true,
+    'update': true,
+    'delete': true,
+    'firma': false,
+    'csv': false,
+    'activo': true,
+    'id_modulo': 3,
+    'id_rol': 1
+  },
+  {
+    'create': true,
+    'read': true,
+    'update': true,
+    'delete': true,
+    'firma': false,
+    'csv': false,
+    'activo': true,
+    'id_modulo': 4,
+    'id_rol': 1
+  },
+  {
+    'create': true,
+    'read': true,
+    'update': true,
+    'delete': true,
+    'firma': false,
+    'csv': false,
+    'activo': true,
+    'id_modulo': 5,
+    'id_rol': 1
+  },
+  {
+    'create': true,
+    'read': true,
+    'update': true,
+    'delete': true,
+    'firma': false,
+    'csv': false,
+    'activo': true,
+    'id_modulo': 6,
+    'id_rol': 1
+  },
+  {
+    'create': true,
+    'read': true,
+    'update': true,
+    'delete': true,
+    'firma': false,
+    'csv': false,
+    'activo': true,
+    'id_modulo': 7,
+    'id_rol': 1
+  },
+  {
+    'create': true,
+    'read': true,
+    'update': true,
+    'delete': true,
+    'firma': false,
+    'csv': false,
+    'activo': true,
+    'id_modulo': 8,
+    'id_rol': 1
+  },
+  {
+    'create': true,
+    'read': true,
+    'update': true,
+    'delete': true,
+    'firma': false,
+    'csv': false,
+    'activo': true,
+    'id_modulo': 9,
+    'id_rol': 1
+  },
+  {
+    'create': true,
+    'read': true,
+    'update': true,
+    'delete': true,
+    'firma': false,
+    'csv': false,
+    'activo': true,
+    'id_modulo': 10,
+    'id_rol': 1
+  },
+  {
+    'create': true,
+    'read': true,
+    'update': true,
+    'delete': true,
+    'firma': false,
+    'csv': false,
+    'activo': true,
+    'id_modulo': 11,
+    'id_rol': 1
+  },
+  {
+    'create': true,
+    'read': true,
+    'update': true,
+    'delete': true,
+    'firma': false,
+    'csv': false,
+    'activo': true,
+    'id_modulo': 12,
+    'id_rol': 1
+  },
+  {
+    'create': true,
+    'read': true,
+    'update': true,
+    'delete': true,
+    'firma': false,
+    'csv': false,
+    'activo': true,
+    'id_modulo': 13,
+    'id_rol': 1
+  },
+  {
+    'create': true,
+    'read': true,
+    'update': true,
+    'delete': true,
+    'firma': false,
+    'csv': false,
+    'activo': true,
+    'id_modulo': 14,
+    'id_rol': 1
+  },
+  {
+    'create': false,
+    'read': true,
+    'update': false,
+    'delete': false,
+    'firma': false,
+    'csv': false,
+    'activo': true,
+    'id_modulo': 1,
+    'id_rol': 2
+  },
+  {
+    'create': false,
+    'read': false,
+    'update': false,
+    'delete': false,
+    'firma': false,
+    'csv': false,
+    'activo': true,
+    'id_modulo': 2,
+    'id_rol': 2
+  },
+  {
+    'create': false,
+    'read': false,
+    'update': false,
+    'delete': false,
+    'firma': false,
+    'csv': false,
+    'activo': true,
+    'id_modulo': 3,
+    'id_rol': 2
+  },
+  {
+    'create': true,
+    'read': true,
+    'update': true,
+    'delete': true,
+    'firma': false,
+    'csv': false,
+    'activo': true,
+    'id_modulo': 4,
+    'id_rol': 2
+  },
+  {
+    'create': false,
+    'read': false,
+    'update': false,
+    'delete': false,
+    'firma': false,
+    'csv': false,
+    'activo': true,
+    'id_modulo': 5,
+    'id_rol': 2
+  },
+  {
+    'create': false,
+    'read': false,
+    'update': false,
+    'delete': false,
+    'firma': false,
+    'csv': false,
+    'activo': true,
+    'id_modulo': 6,
+    'id_rol': 2
+  },
+  {
+    'create': false,
+    'read': false,
+    'update': false,
+    'delete': false,
+    'firma': false,
+    'csv': false,
+    'activo': true,
+    'id_modulo': 7,
+    'id_rol': 2
+  },
+  {
+    'create': false,
+    'read': false,
+    'update': false,
+    'delete': false,
+    'firma': false,
+    'csv': false,
+    'activo': true,
+    'id_modulo': 8,
+    'id_rol': 2
+  },
+  {
+    'create': false,
+    'read': false,
+    'update': false,
+    'delete': false,
+    'firma': false,
+    'csv': false,
+    'activo': true,
+    'id_modulo': 9,
+    'id_rol': 2
+  },
+  {
+    'create': false,
+    'read': true,
+    'update': false,
+    'delete': false,
+    'firma': false,
+    'csv': false,
+    'activo': true,
+    'id_modulo': 10,
+    'id_rol': 2
+  },
+  {
+    'create': true,
+    'read': true,
+    'update': true,
+    'delete': true,
+    'firma': false,
+    'csv': false,
+    'activo': true,
+    'id_modulo': 11,
+    'id_rol': 2
+  },
+  {
+    'create': false,
+    'read': false,
+    'update': false,
+    'delete': false,
+    'firma': false,
+    'csv': false,
+    'activo': true,
+    'id_modulo': 12,
+    'id_rol': 2
+  },
+  {
+    'create': true,
+    'read': true,
+    'update': true,
+    'delete': true,
+    'firma': false,
+    'csv': false,
+    'activo': true,
+    'id_modulo': 13,
+    'id_rol': 2
+  },
+  {
+    'create': false,
+    'read': true,
+    'update': false,
+    'delete': false,
+    'firma': false,
+    'csv': false,
+    'activo': true,
+    'id_modulo': 14,
+    'id_rol': 2
+  },
+  {
+    'create': false,
+    'read': false,
+    'update': false,
+    'delete': false,
+    'firma': false,
+    'csv': false,
+    'activo': true,
+    'id_modulo': 1,
+    'id_rol': 3
+  },
+  {
+    'create': false,
+    'read': false,
+    'update': false,
+    'delete': false,
+    'firma': false,
+    'csv': false,
+    'activo': true,
+    'id_modulo': 2,
+    'id_rol': 3
+  },
+  {
+    'create': false,
+    'read': false,
+    'update': false,
+    'delete': false,
+    'firma': false,
+    'csv': false,
+    'activo': true,
+    'id_modulo': 3,
+    'id_rol': 3
+  },
+  {
+    'create': false,
+    'read': false,
+    'update': false,
+    'delete': false,
+    'firma': false,
+    'csv': false,
+    'activo': true,
+    'id_modulo': 4,
+    'id_rol': 3
+  },
+  {
+    'create': false,
+    'read': false,
+    'update': false,
+    'delete': false,
+    'firma': false,
+    'csv': false,
+    'activo': true,
+    'id_modulo': 5,
+    'id_rol': 3
+  },
+  {
+    'create': false,
+    'read': false,
+    'update': false,
+    'delete': false,
+    'firma': false,
+    'csv': false,
+    'activo': true,
+    'id_modulo': 6,
+    'id_rol': 3
+  },
+  {
+    'create': false,
+    'read': false,
+    'update': false,
+    'delete': false,
+    'firma': false,
+    'csv': false,
+    'activo': true,
+    'id_modulo': 7,
+    'id_rol': 3
+  },
+  {
+    'create': false,
+    'read': false,
+    'update': false,
+    'delete': false,
+    'firma': false,
+    'csv': false,
+    'activo': true,
+    'id_modulo': 8,
+    'id_rol': 3
+  },
+  {
+    'create': false,
+    'read': false,
+    'update': false,
+    'delete': false,
+    'firma': false,
+    'csv': false,
+    'activo': true,
+    'id_modulo': 9,
+    'id_rol': 3
+  },
+  {
+    'create': false,
+    'read': true,
+    'update': false,
+    'delete': false,
+    'firma': false,
+    'csv': false,
+    'activo': true,
+    'id_modulo': 10,
+    'id_rol': 3
+  },
+  {
+    'create': false,
+    'read': true,
+    'update': false,
+    'delete': false,
+    'firma': false,
+    'csv': false,
+    'activo': true,
+    'id_modulo': 11,
+    'id_rol': 3
+  },
+  {
+    'create': false,
+    'read': false,
+    'update': false,
+    'delete': false,
+    'firma': false,
+    'csv': false,
+    'activo': true,
+    'id_modulo': 12,
+    'id_rol': 3
+  },
+  {
+    'create': true,
+    'read': true,
+    'update': true,
+    'delete': true,
+    'firma': false,
+    'csv': false,
+    'activo': true,
+    'id_modulo': 13,
+    'id_rol': 3
+  },
+  {
+    'create': false,
+    'read': true,
+    'update': false,
+    'delete': false,
+    'firma': false,
+    'csv': false,
+    'activo': true,
+    'id_modulo': 14,
+    'id_rol': 3
   }
-}
+];
 
 // Asignando datos de log y timestamps a los datos
 items = setTimestampsSeeder(items);

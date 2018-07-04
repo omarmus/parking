@@ -8,8 +8,6 @@ module.exports = {
       page: Int
       # Campo a ordenar, "-campo" ordena descendentemente
       order: String
-      # Buscar por tipo
-      tipo: TipoMovimiento
       # Buscar por fecha_llegada
       fecha_llegada: Date
       # Buscar por hora_llegada

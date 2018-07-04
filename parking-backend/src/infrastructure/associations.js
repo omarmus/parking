@@ -44,22 +44,22 @@ module.exports = function associations (models) {
   movimientos.belongsTo(vehiculos, { foreignKey: { name: 'id_vehiculo', allowNull: false }, as: 'vehiculo' });
   vehiculos.hasMany(movimientos, { foreignKey: { name: 'id_vehiculo', allowNull: false }, as: 'vehiculo' });
 
-  movimientos.belongsTo(pagos, { foreignKey: { name: 'id_pago', allowNull: false }, as: 'pago' });
-  pagos.hasMany(movimientos, { foreignKey: { name: 'id_pago', allowNull: false }, as: 'pago' });
+  movimientos.belongsTo(pagos, { foreignKey: { name: 'id_pago' }, as: 'pago' });
+  pagos.hasMany(movimientos, { foreignKey: { name: 'id_pago' }, as: 'pago' });
 
   movimientos.belongsTo(usuarios, { foreignKey: { name: 'id_usuario_llegada', allowNull: false }, as: 'usuario_llegada' });
   usuarios.hasMany(movimientos, { foreignKey: { name: 'id_usuario_llegada', allowNull: false } });
 
-  movimientos.belongsTo(usuarios, { foreignKey: { name: 'id_usuario_salida', allowNull: false }, as: 'usuario_salida' });
-  usuarios.hasMany(movimientos, { foreignKey: { name: 'id_usuario_salida', allowNull: false } });
+  movimientos.belongsTo(usuarios, { foreignKey: { name: 'id_usuario_salida' }, as: 'usuario_salida' });
+  usuarios.hasMany(movimientos, { foreignKey: { name: 'id_usuario_salida' } });
 
   // Asociaciones tabla vehículos
-  vehiculos.belongsTo(personas, { foreignKey: { name: 'id_persona', allowNull: false }, as: 'persona' });
-  personas.hasMany(vehiculos, { foreignKey: { name: 'id_persona', allowNull: false } });
+  vehiculos.belongsTo(personas, { foreignKey: { name: 'id_persona' }, as: 'persona' });
+  personas.hasMany(vehiculos, { foreignKey: { name: 'id_persona' } });
 
   // Asociaciones tabla pagos
-  pagos.belongsTo(personas, { foreignKey: { name: 'id_persona', allowNull: false }, as: 'persona' });
-  personas.hasMany(pagos, { foreignKey: { name: 'id_persona', allowNull: false } });
+  pagos.belongsTo(personas, { foreignKey: { name: 'id_persona' }, as: 'persona' });
+  personas.hasMany(pagos, { foreignKey: { name: 'id_persona' } });
 
   pagos.belongsTo(personas, { foreignKey: { name: 'id_usuario', allowNull: false }, as: 'usuario' });
   personas.hasMany(pagos, { foreignKey: { name: 'id_usuario', allowNull: false } });

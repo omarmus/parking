@@ -4,8 +4,6 @@ module.exports = `
   type Movimiento {
     # ID del Movimiento
     id: ID!
-    # tipo
-    tipo: TipoMovimiento
     # fecha_llegada
     fecha_llegada: Date
     # hora_llegada
@@ -26,40 +24,40 @@ module.exports = `
     id_usuario_llegada: Int
     # id_usuario_salida
     id_usuario_salida: Int
+    # vehiculo placa
+    vehiculo_placa: String
+    # nuevo registro
+    nuevo: Boolean
+    # Total pago
+    total: Float
   }
 
   # Tipos de estado del Movimiento
   enum EstadoMovimiento {
-    # Movimiento ACTIVO
-    ACTIVO
-    # Movimiento INACTIVO
-    INACTIVO
-  }
-
-  # Tipos de estado del Movimiento
-  enum TipoMovimiento {
-    # Movimiento ENTRADA
-    ENTRADA
-    # Movimiento SALIDA
+    INGRESO
     SALIDA
+    PAGADO
+    FACTURADO
+    OBSERVADO
   }
 
   # Objeto para crear un Movimiento
   input NewMovimiento {
-    tipo: TipoMovimiento
     fecha_llegada: Date
     hora_llegada: String
     fecha_salida: Date
     hora_salida: String
+    llave: Boolean
+    placa: String
   }
 
   # Objeto para editar un Movimiento
   input EditMovimiento {
-    tipo: TipoMovimiento
     fecha_llegada: Date
     hora_llegada: String
     fecha_salida: Date
     hora_salida: String
+    llave: Boolean
     estado: EstadoMovimiento
   }
 

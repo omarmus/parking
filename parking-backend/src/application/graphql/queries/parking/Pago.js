@@ -22,6 +22,8 @@ module.exports = {
       total: Float
       # Buscar por estado
       estado: EstadoPago
+      # gestion
+      gestion: Int
       # Buscar por id_persona
       id_persona: Int
       # Buscar por id_usuario
@@ -29,6 +31,8 @@ module.exports = {
     ): Pagos
     # Obtener un pago
     pago(id: Int!): Pago
+    # Obtener un nit
+    nit(nit: String!): Pago
   `,
   Mutation: `
     # Agregar pago

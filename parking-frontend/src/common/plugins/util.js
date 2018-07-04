@@ -2,7 +2,39 @@
 
 'use strict';
 
+let tmplPrint = `<!DOCTYPE html>
+                  <html lang="es">
+                  <head>
+                    <meta charset="UTF-8"/>
+                    <title>Document</title>
+                    <style>{css}</style>
+                  </head>
+                  <body>
+                    {body}
+                  </body>
+                  </html>`;
+
 const Util = {
+  nano (template, data) {
+    return template.replace(/\{([\w\.]*)\}/g, function (str, key) { // eslint-disable-line
+      let keys = key.split('.');
+      let v = data[keys.shift()];
+      for (let i = 0, l = keys.length; i < l; i++) {
+        v = v[keys[i]];
+      }
+      return (typeof v !== 'undefined' && v !== null) ? v : '';
+    });
+  },
+
+  print (body, css) {
+    let popup = window.open('', 'print');
+    let html = this.nano(tmplPrint, { body, css });
+    popup.document.write(html);
+    popup.document.close();
+    popup.focus();
+    popup.print();
+    popup.close();
+  },
 
   toType (obj) {
     return ({}).toString.call(obj).match(/\s([a-zA-Z]+)/)[1].toLowerCase();

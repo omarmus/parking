@@ -39,6 +39,10 @@ module.exports = function pagosRepository (models, Sequelize) {
       query.where.id_persona = params.id_persona;
     }
 
+    if (params.gestion) {
+      query.where.gestion = params.gestion;
+    }
+
     if (params.id_usuario) {
       query.where.id_usuario = params.id_usuario;
     }
@@ -52,6 +56,14 @@ module.exports = function pagosRepository (models, Sequelize) {
 
   function findById (id) {
     return pagos.findById(id);
+  }
+
+  function findByNit (nit) {
+    return pagos.findOne({
+      where: {
+        nit
+      }
+    });
   }
 
   async function createOrUpdate (pago) {
@@ -80,6 +92,7 @@ module.exports = function pagosRepository (models, Sequelize) {
     findAll,
     findById,
     deleteItem,
-    createOrUpdate
+    createOrUpdate,
+    findByNit
   };
 };

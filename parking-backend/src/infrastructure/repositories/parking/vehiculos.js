@@ -52,6 +52,14 @@ module.exports = function vehiculosRepository (models, Sequelize) {
     return vehiculos.findById(id);
   }
 
+  function findByPlaca (placa) {
+    return vehiculos.findOne({
+      where: {
+        placa
+      }
+    });
+  }
+
   async function createOrUpdate (vehiculo) {
     const cond = {
       where: {
@@ -73,6 +81,7 @@ module.exports = function vehiculosRepository (models, Sequelize) {
 
     let result;
     try {
+      vehiculo.placa = vehiculo.placa.toUpperCase();
       result = await vehiculos.create(vehiculo);
     } catch (e) {
       errorHandler(e);
@@ -89,6 +98,7 @@ module.exports = function vehiculosRepository (models, Sequelize) {
     findAll,
     findById,
     deleteItem,
-    createOrUpdate
+    createOrUpdate,
+    findByPlaca
   };
 };

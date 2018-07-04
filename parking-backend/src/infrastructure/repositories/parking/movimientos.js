@@ -4,12 +4,22 @@ const { getQuery } = require('../../lib/util');
 const { deleteItemModel } = require('../../lib/queries');
 
 module.exports = function movimientosRepository (models, Sequelize) {
-  const { movimientos } = models;
+  const { movimientos, vehiculos } = models;
   // const Op = Sequelize.Op;
 
   function findAll (params = {}) {
     let query = getQuery(params);
     query.where = {};
+
+    query.include = [
+      {
+        attributes: [
+          'placa'
+        ],
+        model: vehiculos,
+        as: 'vehiculo'
+      }
+    ];
 
     if (params.tipo) {
       query.where.tipo = params.tipo;

@@ -7,7 +7,7 @@ module.exports = function setupResolver (services) {
   return {
     Query: {
       entidades: async (_, args, context) => {
-        permissions(context, 'entidades:read');
+        permissions(context, 'entidades:read|usuarios:read');
 
         let items = await Entidad.findAll(args, context.id_rol, context.id_entidad);
         return items.data;

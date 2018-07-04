@@ -8,7 +8,6 @@ module.exports = (sequelize, DataTypes) => {
     id: util.pk,
     nit: {
       type: DataTypes.STRING(50),
-      allowNull: false,
       xlabel: lang.t('fields.nit')
     },
     razon_social: {
@@ -25,13 +24,16 @@ module.exports = (sequelize, DataTypes) => {
     },
     fecha: {
       type: DataTypes.DATE,
-      allowNull: false,
       xlabel: lang.t('fields.fecha')
     },
     total: {
       type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
       xlabel: lang.t('fields.total')
+    },
+    gestion: {
+      type: DataTypes.INTEGER,
+      xlabel: lang.t('fields.gestion')
     },
     estado: {
       type: DataTypes.ENUM,

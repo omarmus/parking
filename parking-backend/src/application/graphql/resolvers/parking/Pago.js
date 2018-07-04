@@ -17,6 +17,12 @@ module.exports = function setupResolver (services) {
 
         let item = await Pago.findById(args.id);
         return item.data;
+      },
+      nit: async (_, args, context) => {
+        permissions(context, 'pagos:read');
+
+        let item = await Pago.findByNit(args.nit);
+        return item.data;
       }
     },
     Mutation: {

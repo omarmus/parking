@@ -16,6 +16,8 @@ import Log from '@/components/admin/Log';
 
 // Parking
 import Tarifa from '@/components/parking/tarifa/Tarifa';
+import Movimiento from '@/components/parking/movimiento/Movimiento';
+import Pago from '@/components/parking/pago/Pago';
 
 Vue.use(Router);
 
@@ -82,6 +84,16 @@ export default new Router({
       path: '/tarifas',
       name: 'Tarifa',
       component: Tarifa
+    },
+    {
+      path: '/pagos',
+      name: 'Pago',
+      component: Pago
+    },
+    {
+      path: '/movimientos',
+      name: 'Movimiento',
+      component: Movimiento
     }
   ]
 });
