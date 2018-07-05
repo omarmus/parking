@@ -9,3 +9,4 @@ src/common/src/config/mail.js
 
 deploy/roles/backend/files/
 deploy/roles/frontend/files/
+deploy/ssh/

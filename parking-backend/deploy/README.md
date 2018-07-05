@@ -67,20 +67,16 @@ sh copy.sh
 Se debe verificar que todas estas carpetas existan con su contenido correspondiente:
 
 ``` bash
-deploy/roles/common/files/common/
-deploy/roles/infrastructure/files/infrastructure/
-deploy/roles/domain/files/domain/
-deploy/roles/application/files/application/
-deploy/roles/web/files/web/
+deploy/roles/backend/files/parking-backend/
 ```
 
 **Nota.-** Si el archivo `copy.sh` no copia todos los archivos requeridos ejecutar todos los comandos del archivo uno por uno.
 
 ## 7. Configurando base de datos y correo electrónico
 
-- Se debe configurar la conexión de la base de datos en el archivo copiado `deploy/roles/common/files/common/src/config/db.js`
+- Se debe configurar la conexión de la base de datos en el archivo copiado `deploy/roles/backend/files/parking-backend/src/common/src/config/db.js`
 
-- Se debe configurar el correo electrónico en el archivo copiado `deploy/roles/common/files/common/src/config/correo.js`
+- Se debe configurar el correo electrónico en el archivo copiado `deploy/roles/backend/files/parking-backend/src/common/src/config/correo.js`
 
 ## 8. Ejecutando Ansible y haciendo deploy del sistema
 
@@ -108,7 +104,7 @@ systemctl status backend-proxy
 
 Si se desea probar el deploy de manera local seguir los siguientes pasos:
 
-1. Requisitos.- 
+1. Requisitos.-
 - Instalar Virtualbox https://www.virtualbox.org/wiki/Downloads
 - Instalar Vagrant https://www.vagrantup.com/downloads.html
 

@@ -2,19 +2,19 @@
 - include: deps.yml
 - name: Copy Backend
   copy:
-    src=base-backend
+    src=parking-backend
     dest=/usr/local/src
     mode=u=rwx,g=rwx,o=rx
 - name: Run npm install
   command: npm install
-    chdir=/usr/local/src/base-backend
-    creates=/usr/local/src/base-backend/node_modules
+    chdir=/usr/local/src/parking-backend
+    creates=/usr/local/src/parking-backend/node_modules
 - name: Setup Database
   command: npm run setup -- --yes
-    chdir=/usr/local/src/base-backend
+    chdir=/usr/local/src/parking-backend
 - name: Setup Seeders
   command: npm run seeders-prod
-    chdir=/usr/local/src/base-backend
+    chdir=/usr/local/src/parking-backend
 - name: Install systemd script
   copy:
     src=backend-admin.service
