@@ -8,40 +8,32 @@ const moment = require('moment');
 module.exports = function setupUsuario (api, services) {
   api.get('/persona-segip/:ci', guard.check(['serviciosIop:read']), async (req, res, next) => {
     debug('Buscando persona en SEGIP');
-    const { Iop, Persona } = services;
+    const { Persona } = services;
     const { ci } = req.params;
-    const { fechaNacimiento, complemento, db, tipoDoc = 'CI' } = req.query;
+    const { fechaNacimiento, complemento, tipoDoc = 'CI' } = req.query;
 
     let persona;
     try {
-      if (db) {
-        persona = await Persona.find({
-          nro_documento: ci + (complemento ? '-' + complemento : ''),
-          tipo_documento: tipoDoc,
-          fecha_nacimiento: moment(fechaNacimiento, 'DD/MM/YYYY').utcOffset(0).format('YYYY-MM-DD')
-        });
-        if (persona.code === 1) {
-          persona = persona.data;
-          persona = {
-            paterno: persona.primer_apellido,
-            materno: persona.segundo_apellido,
-            nombres: persona.nombres,
-            nacionalidad: persona.nacionalidad,
-            telefono: persona.telefono,
-            movil: persona.movil,
-            genero: persona.genero,
-            id_persona: persona.id
-          };
-          persona = { persona };
-        } else {
-          if (tipoDoc === 'CI') {
-            persona = await Iop.segip.buscarPersona(ci, fechaNacimiento, complemento);
-          } else {
-            return res.send({ warning: 'La persona no está registrada en el sistema, complete los datos para registrarla.' });
-          }
-        }
+      persona = await Persona.find({
+        nro_documento: ci + (complemento ? '-' + complemento : ''),
+        tipo_documento: tipoDoc,
+        fecha_nacimiento: moment(fechaNacimiento, 'DD/MM/YYYY').utcOffset(0).format('YYYY-MM-DD')
+      });
+      if (persona.code === 1) {
+        persona = persona.data;
+        persona = {
+          paterno: persona.primer_apellido,
+          materno: persona.segundo_apellido,
+          nombres: persona.nombres,
+          nacionalidad: persona.nacionalidad,
+          telefono: persona.telefono,
+          movil: persona.movil,
+          genero: persona.genero,
+          id_persona: persona.id
+        };
+        persona = { persona };
       } else {
-        persona = await Iop.segip.buscarPersona(ci, fechaNacimiento, complemento);
+        return res.send({ warning: 'La persona no está registrada en el sistema, complete los datos para registrarla.' });
       }
     } catch (e) {
       return next(e);

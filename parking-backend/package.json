@@ -28,7 +28,6 @@
   "author": "Omar Gutiérrez Condori <ogutierrez@agetic.gob.bo>",
   "license": "MIT",
   "dependencies": {
-    "app-iop": "git+ssh://git@gitlab.geo.gob.bo:base/app-iop.git",
     "app-logs": "^1.1.4",
     "app-params": "^0.2.1",
     "body-parser": "^1.18.2",
