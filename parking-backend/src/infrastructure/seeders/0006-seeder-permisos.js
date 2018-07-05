@@ -279,9 +279,9 @@ let items = [
     'id_rol': 2
   },
   {
-    'create': false,
-    'read': false,
-    'update': false,
+    'create': true,
+    'read': true,
+    'update': true,
     'delete': false,
     'firma': false,
     'csv': false,
@@ -301,9 +301,9 @@ let items = [
     'id_rol': 2
   },
   {
-    'create': false,
+    'create': true,
     'read': true,
-    'update': false,
+    'update': true,
     'delete': false,
     'firma': false,
     'csv': false,
@@ -433,9 +433,9 @@ let items = [
     'id_rol': 3
   },
   {
-    'create': false,
-    'read': false,
-    'update': false,
+    'create': true,
+    'read': true,
+    'update': true,
     'delete': false,
     'firma': false,
     'csv': false,
@@ -455,9 +455,9 @@ let items = [
     'id_rol': 3
   },
   {
-    'create': false,
+    'create': true,
     'read': true,
-    'update': false,
+    'update': true,
     'delete': false,
     'firma': false,
     'csv': false,
