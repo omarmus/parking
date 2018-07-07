@@ -18,9 +18,6 @@ También ya se integra los siguientes módulos con sus respectivos seeders
 ## Requisitos
 - Nodejs 7.6 en adelante
 
-## Dependencias
-Este módulo requiere el módulo common https://gitlab.geo.gob.bo/base/common donde se encuentra la configuración de base de datos entre otras cosas
-
 ## Instalando el proyecto
 
 Siga los siguientes pasos:
