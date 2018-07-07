@@ -1,3 +1,0 @@
----
-- apt: name=git state=present
-- apt: name=build-essential state=present
