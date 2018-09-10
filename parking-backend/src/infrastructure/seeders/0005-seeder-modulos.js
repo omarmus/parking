@@ -109,9 +109,17 @@ let items = [
     id_modulo: 10
   },
   {
-    label: 'Pagos realizados',
+    label: 'Pagos',
     ruta: 'pagos',
     orden: 14,
+    estado: 'ACTIVO',
+    visible: true,
+    id_modulo: 10
+  },
+  {
+    label: 'Contratos',
+    ruta: 'contratos',
+    orden: 15,
     estado: 'ACTIVO',
     visible: true,
     id_modulo: 10

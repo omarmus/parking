@@ -31,7 +31,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     estado: {
       type: DataTypes.ENUM,
-      values: ['INGRESO', 'SALIDA', 'PAGADO', 'FACTURADO', 'OBSERVADO'],
+      values: ['INGRESO', 'SALIDA', 'POR_PAGAR', 'PAGADO', 'FACTURADO', 'OBSERVADO'],
       defaultValue: 'INGRESO',
       allowNull: false,
       xlabel: lang.t('fields.estado')

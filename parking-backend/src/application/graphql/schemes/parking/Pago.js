@@ -44,6 +44,7 @@ module.exports = `
     nro_autorizacion: String
     fecha: Date
     total: Float
+    id_movimiento: Int
   }
 
   # Objeto para editar un Pago
@@ -55,6 +56,7 @@ module.exports = `
     fecha: Date
     total: Float
     estado: EstadoPago
+    id_movimiento: Int
   }
 
   # Objeto de paginación para Pago

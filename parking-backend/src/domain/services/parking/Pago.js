@@ -2,9 +2,10 @@
 
 const debug = require('debug')('app:service:pago');
 const { diff } = require('../../lib/time');
+const moment = require('moment');
 
 module.exports = function pagoService (repositories, res) {
-  const { pagos, tarifas } = repositories;
+  const { pagos, tarifas, movimientos } = repositories;
 
   async function findAll (params = {}, idRol, idEntidad) {
     debug('Lista de pagos|filtros');
@@ -23,20 +24,28 @@ module.exports = function pagoService (repositories, res) {
     return res.success(lista);
   }
 
-  async function calcularTotal (horaInicio, horaSalida) {
+  async function calcularTotal (fechaInicio, horaInicio, fechaSalida, horaSalida) {
     debug('Calculando total', horaInicio, horaSalida);
     let total = 0;
-    let minutos = diff(horaInicio, horaSalida);
+    let minutos = diff(fechaInicio, horaInicio, fechaSalida, horaSalida);
     console.log('MINUTOS TOTAL', minutos);
-    let gestion = new Date().getFullYear();
+    let gestion = moment().format('YYYY');
     let items = await tarifas.findAll({ gestion, order: 'minutos', estado: 'ACTIVO', turno: 'DIURNO' });
     items = items.rows;
-    console.log('items', items);
+    // console.log('items', items);
+    let maxMinutos = parseInt(items[items.length - 1].minutos);
+    let maxPrecio = parseFloat(items[items.length - 1].precio);
+
+    console.log('DÍAS', Math.floor(minutos / maxMinutos));
+    total = Math.floor(minutos / maxMinutos) * maxPrecio;
+    if (minutos > maxMinutos) {
+      minutos = minutos % maxMinutos;
+    }
+    console.log('MINUTOS RESTANTES', minutos);
     for (let i in items) {
-      console.log('ITEM', items[i]);
       console.log('MINUTOS', items[i].minutos, 'PRECIO', items[i].precio);
       if (minutos <= items[i].minutos) {
-        total = parseFloat(items[i].precio);
+        total += parseFloat(items[i].precio);
         console.log('TOTAL!!!', total);
         break;
       }
@@ -68,10 +77,18 @@ module.exports = function pagoService (repositories, res) {
     let pago;
     try {
       if (data.id) {
+        // Actualizando el movimiento a estado PAGADO
+        if (data.id_movimiento) {
+          await movimientos.createOrUpdate({
+            id: data.id_movimiento,
+            estado: 'PAGADO'
+          });
+        }
+
         // Realizando el pago
-        data.fecha = new Date();
+        data.fecha = moment();
         data.estado = 'PAGADO';
-        data.gestion = new Date().getFullYear();
+        data.gestion = moment().format('YYYY');
       }
       pago = await pagos.createOrUpdate(data);
     } catch (e) {

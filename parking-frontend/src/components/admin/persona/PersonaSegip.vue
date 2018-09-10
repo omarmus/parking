@@ -13,7 +13,7 @@
           :disabled="!!persona"
           ></v-select>
       </v-flex>
-      <v-flex xs3>
+      <v-flex xs4>
         <v-text-field
           label="Número de documento"
           v-model="nro_documento"
@@ -24,7 +24,7 @@
           :disabled="!!persona"
           ></v-text-field>
       </v-flex>
-      <v-flex :class="enabledFecha ? 'xs5' : 'xs3'">
+      <v-flex xs4>
         <select-date
           label="Fecha de nacimiento"
           model="form.fecha_nacimiento"
@@ -35,7 +35,7 @@
         >
         </select-date>
       </v-flex>
-      <v-flex xs2 v-if="!enabledFecha">
+      <!-- <v-flex xs2 v-if="!enabledFecha">
         <v-btn
           v-if="persona"
           @click="cambiar"><v-icon>compare_arrows</v-icon> Cambiar</v-btn>
@@ -44,7 +44,7 @@
           v-if="!persona"
           :disabled="$filter.empty(tipo_documento) || $filter.empty(nro_documento) || $filter.empty(fecha_nacimiento) || loading"
           @click="buscarPersona"><v-icon>search</v-icon> Buscar</v-btn>
-      </v-flex>
+      </v-flex> -->
     </v-layout>
   </div>
 </template>

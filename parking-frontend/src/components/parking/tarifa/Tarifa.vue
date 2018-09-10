@@ -123,7 +123,7 @@
               </v-tooltip>
             </td>
             <td class="text-xs-right">{{ getHora(items.item.minutos) }}</td>
-            <td class="text-xs-right">1 a {{ items.item.minutos }}</td>
+            <td class="text-xs-right"><span v-if="items.item.minutos">1 a {{ items.item.minutos }}</span></td>
             <td class="text-xs-right">Bs. {{ items.item.precio }}</td>
             <td>{{ items.item.turno }}</td>
             <td>{{ items.item.gestion }}</td>

@@ -73,9 +73,9 @@
         </v-form>
       </v-card>
     </div>
-    <div class="login-lang">
+    <!-- <div class="login-lang">
       <app-lang></app-lang>
-    </div>
+    </div> -->
   </section>
 </template>
 

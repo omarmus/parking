@@ -2,16 +2,18 @@
 
 const { GraphQLScalarType } = require('graphql');
 const { Kind } = require('graphql/language');
-// const moment = require('moment');
+const moment = require('moment');
 
 const scalars = {
   Date: new GraphQLScalarType({
     name: 'Date',
     description: 'Date custom scalar type',
-    parseValue (value) {
-      return new Date(value); // value from the client
+    parseValue (value) { // set
+      // return new Date(value); // value from the client
+      // return moment(value).format('YYYY-MM-DD');
+      return moment(value, 'YYYY-MM-DD').format('YYYY-MM-DD');
     },
-    serialize (value) {
+    serialize (value) { // get
       // return moment(value).format('DD/MM/YYYY, h:mm a'); // value sent to the client
       return value;
     },

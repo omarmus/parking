@@ -18,6 +18,7 @@ import Log from '@/components/admin/Log';
 import Tarifa from '@/components/parking/tarifa/Tarifa';
 import Movimiento from '@/components/parking/movimiento/Movimiento';
 import Pago from '@/components/parking/pago/Pago';
+import Contrato from '@/components/parking/contrato/Contrato';
 
 Vue.use(Router);
 
@@ -94,6 +95,11 @@ export default new Router({
       path: '/movimientos',
       name: 'Movimiento',
       component: Movimiento
+    },
+    {
+      path: '/contratos',
+      name: 'Contrato',
+      component: Contrato
     }
   ]
 });

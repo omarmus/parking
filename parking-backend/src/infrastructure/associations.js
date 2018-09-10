@@ -11,7 +11,8 @@ module.exports = function associations (models) {
     personas,
     vehiculos,
     movimientos,
-    pagos
+    pagos,
+    contratos
   } = models;
 
   // MODULO USUARIOS
@@ -63,6 +64,10 @@ module.exports = function associations (models) {
 
   pagos.belongsTo(personas, { foreignKey: { name: 'id_usuario', allowNull: false }, as: 'usuario' });
   personas.hasMany(pagos, { foreignKey: { name: 'id_usuario', allowNull: false } });
+
+  // Asociaciones tabla contratos
+  contratos.belongsTo(vehiculos, { foreignKey: { name: 'id_vehiculo', allowNull: false }, as: 'vehiculo' });
+  vehiculos.hasMany(contratos, { foreignKey: { name: 'id_vehiculo', allowNull: false } });
 
   return models;
 };

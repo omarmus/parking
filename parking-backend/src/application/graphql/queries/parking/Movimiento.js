@@ -26,6 +26,14 @@ module.exports = {
       id_usuario_llegada: Int
       # Buscar por id_usuario_salida
       id_usuario_salida: Int
+      # Buscar solo pendientes
+      pendientes: Boolean
+      # Fecha de pago
+      fecha_pago: String
+      # Fecha de inicio
+      fecha_inicio: String
+      # Fecha de fin
+      fecha_fin: String
     ): Movimientos
     # Obtener un movimiento
     movimiento(id: Int!): Movimiento

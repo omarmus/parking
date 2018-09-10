@@ -224,6 +224,31 @@ const Util = {
         return '¿Está seguro de abandonar la página?.';
       };
     }
+  },
+
+  pad (n, width = 10, z = '0') {
+    n = n + '';
+    return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+  },
+
+  csv (rows, headers) {
+    let csvContent = 'data:text/csv;charset=utf-8,';
+    if (headers) {
+      csvContent += headers.join(',') + '\r\n';
+    }
+    rows.forEach(item => {
+      let row = item.join(',');
+      csvContent += row + '\r\n';
+    });
+    console.log('CSV', csvContent);
+    let encodedUri = encodeURI(csvContent);
+    let link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', 'reporte.csv');
+    link.innerHTML = 'Click Here to download';
+    document.body.appendChild(link); // Required for FF
+    link.click();
+    setTimeout(this.$loading.hide, 1000);
   }
 };
 

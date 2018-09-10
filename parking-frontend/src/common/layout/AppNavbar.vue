@@ -7,7 +7,7 @@
   >
     <v-toolbar-side-icon @click.stop="$store.commit('layout/toggleMiniVariant')"></v-toolbar-side-icon>
     <v-spacer></v-spacer>
-    <app-lang></app-lang>
+    <!-- <app-lang></app-lang> -->
     <v-tooltip bottom>
       <v-btn icon @click="fullscreen()" class="btn-fullscreen" slot="activator">
         <v-icon>fullscreen</v-icon>
@@ -21,9 +21,9 @@
       </v-btn>
       <span>Actualizar la página</span>
     </v-tooltip>
-    <v-btn icon @click.stop="$store.commit('layout/toggleRightDrawer')">
+    <!-- <v-btn icon @click.stop="$store.commit('layout/toggleRightDrawer')">
       <v-icon>notifications</v-icon>
-    </v-btn>
+    </v-btn> -->
     <v-menu
       offset-x
       :close-on-content-click="false"

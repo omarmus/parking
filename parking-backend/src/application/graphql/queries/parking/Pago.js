@@ -17,7 +17,7 @@ module.exports = {
       # Buscar por nro_autorizacion
       nro_autorizacion: String
       # Buscar por fecha
-      fecha: Date
+      fecha: String
       # Buscar por total
       total: Float
       # Buscar por estado

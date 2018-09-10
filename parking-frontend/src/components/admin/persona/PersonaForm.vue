@@ -9,7 +9,6 @@
           maxlength="100"
           :rules="$validate(['required'])"
           required
-          :disabled="tipo_documento == 'CI' || enabledFecha"
           ></v-text-field>
       </v-flex>
 
@@ -18,7 +17,6 @@
           label="Primer apellido"
           v-model="primer_apellido"
           maxlength="100"
-          :disabled="tipo_documento == 'CI' || enabledFecha"
           ></v-text-field>
       </v-flex>
 
@@ -27,7 +25,6 @@
           label="Segundo apellido"
           v-model="segundo_apellido"
           maxlength="100"
-          :disabled="tipo_documento == 'CI' || enabledFecha"
           ></v-text-field>
       </v-flex>
 

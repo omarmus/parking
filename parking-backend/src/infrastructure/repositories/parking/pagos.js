@@ -2,6 +2,7 @@
 
 const { getQuery } = require('../../lib/util');
 const { deleteItemModel } = require('../../lib/queries');
+const moment = require('moment');
 
 module.exports = function pagosRepository (models, Sequelize) {
   const { pagos } = models;
@@ -49,6 +50,14 @@ module.exports = function pagosRepository (models, Sequelize) {
 
     if (params.estado) {
       query.where.estado = params.estado;
+    }
+
+    if (params.fecha) {
+      query.where.fecha = moment(params.fecha);
+      query.where.fecha = {
+        [Op.gte]: moment(params.fecha).format('YYYY-MM-DD HH:ss'),
+        [Op.lt]: moment(params.fecha).add(1, 'days').format('YYYY-MM-DD HH:ss')
+      };
     }
 
     return pagos.findAndCountAll(query);

@@ -26,14 +26,23 @@ export default new Vuex.Store({
     modal: false,
     modal2: false,
     modal3: false,
+    modal4: false,
+    modal5: false,
+    modal6: false,
+    modal7: false,
+    modal8: false,
+    modal9: false,
     action: null,
+    selected: null,
     alert: {
       show: false,
+      title: 'Alerta',
       text: '',
       callback: null
     },
     form: {},
     clean: false,
+    changes: 0,
     confirm: {
       show: false,
       text: '',
@@ -65,8 +74,18 @@ export default new Vuex.Store({
     setForm (state, value) {
       state.form = value;
     },
+    setChanges (state, value) {
+      state.changes = value;
+    },
     setAction (state, value) {
-      state.action = value;
+      if (value && value.sleep) {
+        setTimeout(() => {
+          state.action = value.action;
+          console.log('Exec action', value.action, 'in', value.sleep);
+        }, value.sleep);
+      } else {
+        state.action = value;
+      }
     },
     cleanDate (state, value) {
       state.clean = value;
@@ -92,6 +111,19 @@ export default new Vuex.Store({
         state.date = value;
       }
     },
+    setSelected (state, value) {
+      if (Array.isArray(value)) {
+        state.selected = value;
+      } else {
+        if (!state.selected) {
+          state.selected = [];
+        }
+        state.selected.push(value);
+      }
+    },
+    setState403 (state, value) {
+      state.state403 = value;
+    },
     setDefault (state) {
       state.auth = false;
       state.menu = {};
@@ -103,6 +135,11 @@ export default new Vuex.Store({
       state.modal = false;
       state.modal2 = false;
       state.modal3 = false;
+      state.modal4 = false;
+      state.modal5 = false;
+      state.modal6 = false;
+      state.modal7 = false;
+      state.modal8 = false;
       state.state403 = false;
       state.alert.show = false;
       state.confirm.show = false;

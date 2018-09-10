@@ -464,6 +464,39 @@ let items = [
     'activo': true,
     'id_modulo': 14,
     'id_rol': 3
+  },
+  {
+    'create': true,
+    'read': true,
+    'update': true,
+    'delete': true,
+    'firma': false,
+    'csv': false,
+    'activo': false,
+    'id_modulo': 15,
+    'id_rol': 1
+  },
+  {
+    'create': true,
+    'read': true,
+    'update': true,
+    'delete': true,
+    'firma': false,
+    'csv': false,
+    'activo': false,
+    'id_modulo': 15,
+    'id_rol': 2
+  },
+  {
+    'create': true,
+    'read': true,
+    'update': true,
+    'delete': false,
+    'firma': false,
+    'csv': false,
+    'activo': false,
+    'id_modulo': 15,
+    'id_rol': 3
   }
 ];
 

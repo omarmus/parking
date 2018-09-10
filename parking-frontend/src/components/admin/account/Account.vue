@@ -23,7 +23,9 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn @click.native="openPass()"><v-icon>lock</v-icon> Cambiar contraseña</v-btn>
-        <v-btn @click.native="openDeactivate()" v-if="user.id_rol != 1" color="error"><v-icon dark>cancel</v-icon> Desactivar cuenta</v-btn>
+        <!-- <v-btn @click.native="openDeactivate()" v-if="user.id_rol != 1" color="error">
+          <v-icon dark>cancel</v-icon> Desactivar cuenta
+        </v-btn> -->
       </v-card-actions>
     </v-card>
 

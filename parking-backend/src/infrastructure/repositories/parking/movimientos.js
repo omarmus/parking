@@ -2,10 +2,11 @@
 
 const { getQuery } = require('../../lib/util');
 const { deleteItemModel } = require('../../lib/queries');
+const moment = require('moment');
 
 module.exports = function movimientosRepository (models, Sequelize) {
-  const { movimientos, vehiculos } = models;
-  // const Op = Sequelize.Op;
+  const { movimientos, vehiculos, pagos } = models;
+  const Op = Sequelize.Op;
 
   function findAll (params = {}) {
     let query = getQuery(params);
@@ -18,6 +19,16 @@ module.exports = function movimientosRepository (models, Sequelize) {
         ],
         model: vehiculos,
         as: 'vehiculo'
+      },
+      {
+        attributes: [
+          'fecha',
+          'total',
+          'gestion',
+          'estado'
+        ],
+        model: pagos,
+        as: 'pago'
       }
     ];
 
@@ -26,7 +37,21 @@ module.exports = function movimientosRepository (models, Sequelize) {
     }
 
     if (params.fecha_llegada) {
-      query.where.fecha_llegada = params.fecha_llegada;
+      query.where.fecha_llegada = moment(params.fecha_llegada);
+    }
+
+    if (params.fecha_pago) {
+      query.where['$pago.fecha$'] = {
+        [Op.gte]: moment(params.fecha_pago).format('YYYY-MM-DD HH:ss'),
+        [Op.lt]: moment(params.fecha_pago).add(1, 'days').format('YYYY-MM-DD HH:ss')
+      };
+    }
+
+    if (params.fecha_inicio && params.fecha_fin) {
+      query.where['$pago.fecha$'] = {
+        [Op.gte]: moment(params.fecha_inicio).format('YYYY-MM-DD HH:ss'),
+        [Op.lte]: moment(params.fecha_fin).format('YYYY-MM-DD HH:ss')
+      };
     }
 
     if (params.hora_llegada) {
@@ -57,6 +82,12 @@ module.exports = function movimientosRepository (models, Sequelize) {
       query.where.id_vehiculo = params.id_vehiculo;
     }
 
+    if (params.pendientes) {
+      query.where.estado = {
+        [Op.or]: ['INGRESO', 'POR_PAGAR']
+      };
+    }
+
     if (params.estado) {
       query.where.estado = params.estado;
     }
@@ -65,7 +96,21 @@ module.exports = function movimientosRepository (models, Sequelize) {
   }
 
   function findById (id) {
-    return movimientos.findById(id);
+    return movimientos.findOne({
+      where: {
+        id
+      },
+      include: [
+        {
+          attributes: [
+            'placa'
+          ],
+          model: vehiculos,
+          as: 'vehiculo'
+        }
+      ],
+      raw: true
+    });
   }
 
   async function createOrUpdate (movimiento) {

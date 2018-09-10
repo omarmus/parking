@@ -7,7 +7,7 @@
         ref="form"
         lazy-validation
         v-model="valid"
-        @submit="registrar">
+        @submit.prevent="registrar">
         <v-card-text class="in-out" :class="{ 'success': tipo === 'ENTRADA', 'warning': tipo === 'SALIDA' }">
           <v-container grid-list-xl fluid class="pt-0 pb-0">
             <v-flex xs12>
@@ -79,6 +79,7 @@
                   :autofocus="focusR"
                   :rules="$validate(['required'])"
                   required
+                  maxlength="10"
                 ></v-text-field>
               </v-flex>
               <v-flex xs4>
@@ -100,7 +101,7 @@
           <v-icon>print</v-icon> Boletas
           <v-spacer></v-spacer>
           <v-btn @click.native="dialog = false"><v-icon>close</v-icon> Cerrar</v-btn>
-          <v-btn @click.native="print" color="primary"><v-icon>print</v-icon> Imprimir</v-btn>
+          <v-btn @click.native="print" color="primary" v-if="!contrato"><v-icon>print</v-icon> Imprimir</v-btn>
         </v-card-title>
         <v-card-text class="pt-0">
           <div id="boleta" v-if="barcode">
@@ -127,6 +128,16 @@
               <p><strong>PLACA:</strong> {{ data.vehiculo_placa }}</p>
             </div>
           </div>
+          <div v-else>
+            <div v-if="contrato" class="boleta contrato">
+              <v-alert value="true" color="info" icon="info" outline class="mb-3">
+                <h4 class="m-0">El automóvil tiene un contrato vigente</h4>
+              </v-alert>
+              <p><strong>Fecha:</strong> {{ $datetime.format(data.fecha_llegada) }} <strong>Hora:</strong> {{ data.hora_llegada }}</p>
+              <p><strong>Dejó llave:</strong> {{ data.llave ? 'SI' : 'NO' }}</p>
+              <p><strong>PLACA:</strong> {{ data.vehiculo_placa }}</p>
+            </div>
+          </div>
         </v-card-text>
       </v-card>
     </v-dialog>
@@ -135,14 +146,17 @@
         <v-card-title class="headline">
           <v-icon>attach_money</v-icon> Pagar
           <v-spacer></v-spacer>
+          <v-chip label color="info" text-color="white">PLACA: <strong>{{ form2.placa }}</strong></v-chip>
         </v-card-title>
         <v-form
           ref="form2"
           lazy-validation
+          @submit.prevent="pagar"
           v-model="valid2">
           <v-card-text class="pt-0">
-            <h3><strong>TOTAL:</strong> Bs. {{ form2.total }}</h3>
-            <v-select
+            <h3 class="text-xs-center" v-if="form2.id">Ticket: <strong>{{ $util.pad(form2.id, 10) }}</strong></h3>
+            <h2 class="text-xs-center"><strong>TOTAL:</strong> Bs. {{ form2.total }} </h2>
+            <!-- <v-select
               :loading="loading2"
               :items="items2"
               :rules="$validate(['required'])"
@@ -171,11 +185,12 @@
               class="uppercase"
               label="Razón social"
               v-model="form2.razon_social"
-            ></v-text-field>
+            ></v-text-field> -->
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn type="submit" @click="pagar" color="primary"><v-icon>attach_money</v-icon> Pagar</v-btn>
+            <v-btn type="button" @click="dialog2 = false"><v-icon>cancel</v-icon> Cancelar</v-btn>
+            <v-btn type="submit" color="primary"><v-icon>attach_money</v-icon> Pagar</v-btn>
           </v-card-actions>
         </v-form>
       </v-card>
@@ -242,8 +257,38 @@ export default {
       search2: null,
       valid: false,
       valid2: false,
-      data: null
+      data: null,
+      pressed: false,
+      chars: [],
+      contrato: false
     };
+  },
+  mounted () {
+    window.addEventListener('keypress', e => {
+      if (e.which >= 48 && e.which <= 57) {
+        this.chars.push(String.fromCharCode(e.which));
+      }
+      console.log(e.which + ':' + this.chars.join('|'));
+      if (this.pressed === false) {
+        setTimeout(() => {
+          if (this.chars.length >= 8) {
+            this.tipo = 'SALIDA';
+            var barcode = this.chars.join('');
+            console.log('Barcode Scanned: ' + barcode);
+            this.form.registro = barcode;
+            setTimeout(() => {
+              this.registrar();
+            }, 500);
+          }
+          this.chars = [];
+          this.pressed = false;
+        }, 500);
+      }
+      this.pressed = true;
+    }, false);
+  },
+  destroy () {
+    window.addEventListener('keypress', null, false);
   },
   methods: {
     getPlacas (placa) {
@@ -315,7 +360,9 @@ export default {
       this.form2.nit = null;
     },
     registrar () {
-      if (this.$refs.form.validate()) {
+      console.log('Enviando!');
+      if (this.$refs && this.$refs.form && this.$refs.form.validate()) {
+        console.log('Es válido');
         if (this.tipo === 'ENTRADA') {
           let data = Object.assign({}, this.form);
           delete data.registro;
@@ -333,6 +380,7 @@ export default {
                   hora_llegada
                   llave
                   vehiculo_placa
+                  contrato
                 }
               }
             `,
@@ -341,21 +389,26 @@ export default {
             }
           }).then(response => {
             if (response && response.movimientoAdd) {
+              let movimiento = response.movimientoAdd;
               this.form = {
                 registro: '',
                 placa: null,
                 llave: false
               };
               this.barcode = null;
-              this.$nextTick(() => {
-                this.barcode = this.pad(response.movimientoAdd.id, 10);
-              });
-              this.data = response.movimientoAdd;
+              this.contrato = movimiento.contrato;
+              if (!movimiento.contrato) {
+                this.$nextTick(() => {
+                  this.barcode = this.$util.pad(movimiento.id, 10);
+                });
+              }
+              this.data = movimiento;
               this.dialog = true;
               this.$message.success();
             }
           });
-        } else {
+        } else { // SALIDA
+          console.log('Enviando salida');
           this.$service.graphql({
             query: `
               mutation edit($id: Int!, $movimiento: EditMovimiento!) {
@@ -364,6 +417,7 @@ export default {
                   estado
                   total
                   id_pago
+                  vehiculo_placa
                 }
               }
             `,
@@ -374,12 +428,15 @@ export default {
           }).then(response => {
             if (response) {
               this.form.registro = '';
-              let mov = response.movimientoEdit;
-              if (mov.estado === 'SALIDA' && mov.id_pago) {
+              let movimiento = response.movimientoEdit;
+              if ((movimiento.estado === 'SALIDA' || movimiento.estado === 'POR_PAGAR') && movimiento.id_pago) {
                 this.dialog2 = true;
                 this.form2 = {
-                  id_pago: mov.id_pago,
-                  total: mov.total
+                  id: movimiento.id,
+                  id_pago: movimiento.id_pago,
+                  total: movimiento.total,
+                  placa: movimiento.vehiculo_placa,
+                  id_movimiento: movimiento.id
                 };
                 this.$message.success();
               } else {
@@ -389,10 +446,6 @@ export default {
           });
         }
       }
-    },
-    pad (n, width, z = '0') {
-      n = n + '';
-      return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
     },
     print () {
       let html = document.getElementById('boleta').innerHTML;
@@ -411,6 +464,7 @@ export default {
           variables: {
             id: this.form2.id_pago,
             pago: {
+              id_movimiento: this.form2.id_movimiento,
               nit: this.form2.nit,
               razon_social: (this.form2.razon_social || '').toUpperCase()
             }
@@ -481,6 +535,11 @@ export default {
   max-width: 300px;
   margin: 0 auto 10px;
 
+  &.contrato {
+    max-width: 100%;
+    padding: 5px;
+  }
+
   .boleta-barcode {
     text-align: center;
     margin-bottom: 5px;
@@ -495,11 +554,6 @@ export default {
 
   p {
     margin: 0 0 5px;
-  }
-}
-.uppercase {
-  input, strong {
-    text-transform: uppercase;
   }
 }
 </style>

@@ -75,7 +75,7 @@
                         ></v-text-field>
                     </v-flex>
 
-                    <v-flex xs6>
+                    <!-- <v-flex xs6>
                       <v-text-field
                         label="Correo electrónico"
                         v-model="email"
@@ -91,13 +91,13 @@
                         v-model="cargo"
                         maxlength="100"
                         ></v-text-field>
-                    </v-flex>
+                    </v-flex> -->
 
                     <v-flex xs7 v-if="$store.state.user.id_rol != 3">
                       <v-select
                         :items="entidades"
                         v-model="id_entidad"
-                        label="Entidad"
+                        label="Parqueo"
                         item-text="text"
                         item-value="value"
                         autocomplete
@@ -236,7 +236,7 @@ export default {
         { text: this.$t('user.crud.user'), value: 'usuario' },
         { text: this.$t('user.crud.fullname'), value: 'nombre_completo' },
         { text: this.$t('user.crud.email'), value: 'email' },
-        { text: this.$t('user.crud.entity'), value: 'id_entidad' },
+        { text: 'Parqueo', value: 'id_entidad' },
         { text: this.$t('user.crud.role'), value: 'id_rol' },
         { text: this.$t('user.crud.status'), value: 'estado' }
       ],

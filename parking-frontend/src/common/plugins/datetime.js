@@ -1,6 +1,7 @@
 'use strict';
 
 import store from '@/store';
+import pad from '@/common/util/pad';
 
 export default {
   store,
@@ -24,11 +25,11 @@ export default {
           format = format || this.formatDate;
           date = date.split(separator);
           if (format === 'dd/MM/YYYY') {
-            return new Date(date[2], date[1] - 1, date[0]);
+            return new Date(date[2], date[1] - 1, date[0], 0, 0, 0);
           } else if (format === 'MM/dd/YYYY') {
-            return new Date(date[2], date[0] - 1, date[1]);
+            return new Date(date[2], date[0] - 1, date[1], 0, 0, 0);
           } else {
-            return new Date(date[0], date[1] - 1, date[2]);
+            return new Date(date[0], date[1] - 1, date[2], 0, 0, 0);
           }
         }
         return date;
@@ -46,9 +47,9 @@ export default {
       getDate (date) {
         date = new Date(date);
         return {
-          day: date.getUTCDate(),
-          month: date.getUTCMonth() + 1,
-          year: date.getUTCFullYear()
+          day: date.getDate(),
+          month: date.getMonth() + 1,
+          year: date.getFullYear()
         };
       },
 
@@ -178,8 +179,39 @@ export default {
         this.formatDate = format;
       },
 
-      now (format) {
-        return this.replace(new Date(), format || this.formatDate);
+      transform (date) {
+        if (date && typeof date === 'string') {
+          date = date.split('-');
+          if (date.length === 3) {
+            return new Date(date[0], date[1] - 1, date[2], 0, 0, 0);
+          }
+        }
+        return date;
+      },
+
+      format2 (date) {
+        if (this.isDate(date)) {
+          return this.sanitizeDateString(`${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`, 'date');
+        }
+        return date;
+      },
+
+      now (typeDate = false, format) {
+        const now = new Date();
+        let date = this.sanitizeDateString(`${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`, 'date');
+        if (format && format === 'SIN_FORMATO') {
+          return date;
+        }
+        if (format === 'datetime') {
+          date = date.split('-');
+          return `${[date[2], date[1], date[0]].join('/')} ${now.getHours()}:${now.getMinutes()}`;
+        }
+        date = date.split('-');
+        date = new Date(date[0], date[1] - 1, date[2], 0, 0, 0);
+        if (typeDate) {
+          return date;
+        }
+        return this.replace(date, format || this.formatDate);
       },
 
       dateLiteral (date) {
@@ -193,7 +225,6 @@ export default {
       timeLiteral (time, txt) {
         let text = '';
         if (typeof time === 'number') {
-          console.log('time number', time);
           if (time === 0) {
             return '';
           }
@@ -202,13 +233,7 @@ export default {
           } else if (time < 3600) {
             text = Math.floor(time / 60) + 'm ' + (time % 60 > 0 ? (time % 60 + 's') : '');
           } else {
-            let hora = Math.floor(time / 3600) + 'h ';
-            let minutos = '';
-            if (time % 3600 > 0) {
-              time = time % 3600;
-              minutos = Math.floor(time / 60) + 'm ';
-            }
-            text = hora + minutos;
+            text = Math.floor(time / 3600) + 'h ' + (time % 3600 > 0 ? (Math.floor((time - (3600 * Math.floor(time / 3600))) / 60) + 'm ') : '') + (time % 60 > 0 ? (time % 60 + 's') : '');
           }
           return (txt || '') + text;
         } else {
@@ -314,14 +339,17 @@ export default {
         return Util.replace(format,
           ['dddd', 'ddd', 'dd', monthLiteral ? 'MMM' : 'MM', 'YYYY', 'HH', 'mm', 'ss'],
           [
-            this.dayslong[date.getUTCDay()],
-            this.days[date.getUTCDay()],
+            this.dayslong[date.getDay()],
+            this.days[date.getDay()],
+            // (date.getDate() < 10 ? '0' : '') + date.getDate(),
             (date.getUTCDate() < 10 ? '0' : '') + date.getUTCDate(),
+            // monthLiteral ? this.months[date.getMonth()] : ((date.getMonth() + 1 < 10 ? '0' : '') + (date.getMonth() + 1)),
             monthLiteral ? this.months[date.getUTCMonth()] : ((date.getUTCMonth() + 1 < 10 ? '0' : '') + (date.getUTCMonth() + 1)),
+            // date.getFullYear(),
             date.getUTCFullYear(),
-            (date.getUTCHours() < 10 ? '0' : '') + date.getUTCHours(),
-            (date.getUTCMinutes() < 10 ? '0' : '') + date.getUTCMinutes(),
-            (date.getUTCSeconds() < 10 ? '0' : '') + date.getUTCSeconds()
+            (date.getHours() < 10 ? '0' : '') + date.getHours(),
+            (date.getMinutes() < 10 ? '0' : '') + date.getMinutes(),
+            (date.getSeconds() < 10 ? '0' : '') + date.getSeconds()
           ]
         );
       },
@@ -405,6 +433,11 @@ export default {
           value,
           key
         });
+      },
+
+      sanitizeDateString (dateString, type = 'date') {
+        const [year, month = 1, date = 1] = dateString.split('-');
+        return `${year}-${pad(month)}-${pad(date)}`.substr(0, { date: 10, month: 7, year: 4 }[type]);
       }
     };
 

@@ -30,6 +30,16 @@ module.exports = `
     nuevo: Boolean
     # Total pago
     total: Float
+    # Tiene contrato
+    contrato: Boolean
+    # pago_fecha
+    pago_fecha: Date
+    # pago_total
+    pago_total: Float
+    # pago_gestion
+    pago_gestion: Int
+    # pago_estado
+    pago_estado: EstadoPago
   }
 
   # Tipos de estado del Movimiento
@@ -39,6 +49,7 @@ module.exports = `
     PAGADO
     FACTURADO
     OBSERVADO
+    POR_PAGAR
   }
 
   # Objeto para crear un Movimiento

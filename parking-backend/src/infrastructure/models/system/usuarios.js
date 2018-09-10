@@ -18,11 +18,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     email: {
       type: DataTypes.STRING(100),
-      unique: true,
-      xlabel: lang.t('fields.email'),
-      validate: {
-        isEmail: true
-      }
+      xlabel: lang.t('fields.email')
     },
     cargo: {
       type: DataTypes.STRING(255),
