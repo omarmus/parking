@@ -115,7 +115,7 @@
                   :headers="headers"
                   :url="url"
                   :filters="filters"
-                  :show-filter="false"
+                  :show-filter="true"
                   :graphql="graphql"
                   :data-graphql="dataGraphql"
                 >
@@ -241,6 +241,18 @@ export default {
         {
           field: 'fecha_pago',
           type: 'hidden',
+          typeG: 'String'
+        },
+        {
+          field: 'id',
+          label: 'Número de ticket',
+          type: 'text',
+          typeG: 'String'
+        },
+        {
+          field: 'placa',
+          label: 'Placa',
+          type: 'text',
           typeG: 'String'
         }
       ],
