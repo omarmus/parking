@@ -8,8 +8,12 @@ module.exports = {
       page: Int
       # Campo a ordenar, "-campo" ordena descendentemente
       order: String
+      # Buscar por id
+      id: String
       # Buscar por fecha_llegada
       fecha_llegada: Date
+      # Buscar por placa
+      placa: String
       # Buscar por hora_llegada
       hora_llegada: String
       # Buscar por fecha_salida

@@ -54,6 +54,10 @@ module.exports = function movimientosRepository (models, Sequelize) {
       };
     }
 
+    if (params.id) {
+      query.where.id = params.id;
+    }
+
     if (params.hora_llegada) {
       query.where.hora_llegada = params.hora_llegada;
     }
@@ -80,6 +84,12 @@ module.exports = function movimientosRepository (models, Sequelize) {
 
     if (params.id_vehiculo) {
       query.where.id_vehiculo = params.id_vehiculo;
+    }
+
+    if (params.placa) {
+      query.where['$vehiculo.placa$'] = {
+        [Op.iLike]: `%${params.placa}%`
+      };
     }
 
     if (params.pendientes) {

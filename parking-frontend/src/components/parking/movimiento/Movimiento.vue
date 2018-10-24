@@ -62,13 +62,22 @@
                   v-model="form.llave"
                 ></v-checkbox>
               </v-flex>
-              <v-flex xs4>
+              <v-flex xs2>
                 <v-btn
                   type="submit"
                   large
                   color="primary">
                   <v-icon>keyboard_arrow_right</v-icon> Registrar
                 </v-btn>
+              </v-flex>
+              <v-flex xs4>
+                <v-switch
+                  row
+                  color="success"
+                  class="autoprint"
+                  label="Impresión automática ticket"
+                  v-model="autoprint"
+                ></v-switch>
               </v-flex>
             </v-layout>
             <v-layout wrap v-else>
@@ -100,8 +109,8 @@
         <v-card-title class="headline">
           <v-icon>print</v-icon> Boletas
           <v-spacer></v-spacer>
-          <v-btn @click.native="dialog = false"><v-icon>close</v-icon> Cerrar</v-btn>
-          <v-btn @click.native="print" color="primary" v-if="!contrato"><v-icon>print</v-icon> Imprimir</v-btn>
+          <v-btn @click="dialog = false"><v-icon>close</v-icon> Cerrar</v-btn>
+          <v-btn @click="print" color="primary" v-if="!contrato"><v-icon color="white">print</v-icon> Imprimir</v-btn>
         </v-card-title>
         <v-card-text class="pt-0">
           <div id="boleta" v-if="barcode">
@@ -116,6 +125,7 @@
               <p><strong>Dejó llave:</strong> {{ data.llave ? 'SI' : 'NO' }}</p>
               <p><strong>PLACA:</strong> {{ data.vehiculo_placa }}</p>
             </div>
+            <hr class="barcode-line">
             <div class="boleta elevation-1">
               <h3>COPIA</h3>
               <div class="boleta-barcode">
@@ -209,7 +219,7 @@ const css = `
     font-family: Arial, Helvetica, sans-serif;
     padding: 20px 20px 15px;
     width: 100%;
-    max-width: 300px;
+    max-width: 250px;
     margin: 0 auto 10px;
   }
   .boleta h3 {
@@ -223,7 +233,16 @@ const css = `
   }
   .boleta-barcode {
     text-align: center;
-    margin-bottom: 5px;
+    margin-top: -15px;
+    margin-bottom: -10px;
+  }
+  .vue-barcode-element {
+    width: 160px;
+  }
+  .barcode-line {
+    border: none;
+    border-top: 1px solid #ccc;
+    margin-bottom: 10px;
   }
 }
 `;
@@ -260,7 +279,8 @@ export default {
       data: null,
       pressed: false,
       chars: [],
-      contrato: false
+      contrato: false,
+      autoprint: true
     };
   },
   mounted () {
@@ -404,6 +424,11 @@ export default {
               }
               this.data = movimiento;
               this.dialog = true;
+              if (this.autoprint) {
+                setTimeout(() => {
+                  this.print();
+                }, 500);
+              }
               this.$message.success();
             }
           });
@@ -532,7 +557,7 @@ export default {
 .boleta {
   padding: 20px 20px 15px;
   width: 100%;
-  max-width: 300px;
+  max-width: 280px;
   margin: 0 auto 10px;
 
   &.contrato {
@@ -542,7 +567,12 @@ export default {
 
   .boleta-barcode {
     text-align: center;
-    margin-bottom: 5px;
+    margin-top: -15px;
+    margin-bottom: -10px;
+  }
+
+  .vue-barcode-element {
+    width: 160px;
   }
 
   h3 {
@@ -553,7 +583,17 @@ export default {
   }
 
   p {
-    margin: 0 0 5px;
+    margin: 0 0 2px;
   }
+
+}
+.barcode-line {
+  border: none;
+  border-top: 1px solid #ccc;
+  margin-bottom: 10px;
+}
+.autoprint {
+  margin-top: 12px;
+  margin-left: 20px;
 }
 </style>

@@ -25,7 +25,7 @@
     "Módulo",
     "usuario"
   ],
-  "author": "Omar Gutiérrez Condori <ogutierrez@agetic.gob.bo>",
+  "author": "Omar Gutiérrez Condori <omargc.mus@gmail.com>",
   "license": "MIT",
   "dependencies": {
     "app-logs": "^1.1.4",

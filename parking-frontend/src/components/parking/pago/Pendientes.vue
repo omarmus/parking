@@ -8,7 +8,9 @@
         :graphql="graphql"
         :filters="filters"
         :id-refresh="idCrud"
+        :order="order"
         :data-graphql="dataGraphql"
+        :show-filter="true"
       >
         <template slot="items" slot-scope="items">
           <td class="text-xs-right">{{ $util.pad(items.item.id, 10) }}</td>
@@ -81,8 +83,21 @@ export default {
           field: 'fecha_llegada',
           type: 'hidden',
           typeG: 'String'
+        },
+        {
+          field: 'id',
+          label: 'Número de ticket',
+          type: 'text',
+          typeG: 'String'
+        },
+        {
+          field: 'placa',
+          label: 'Placa',
+          type: 'text',
+          typeG: 'String'
         }
-      ]
+      ],
+      order: [ 'fecha_llegada', 'DESC' ]
     };
   },
   watch: {

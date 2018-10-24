@@ -6,7 +6,7 @@
     app
   >
     <v-spacer></v-spacer>
-    <div>&copy; omarmus {{ new Date().getFullYear() }}</div>
+    <div>&copy; <a href="https://omarmus.com" target="_blank">omarmus</a> {{ new Date().getFullYear() }}</div>
   </v-footer>
 </template>
 
