@@ -70,7 +70,7 @@
                   <v-icon>keyboard_arrow_right</v-icon> Registrar
                 </v-btn>
               </v-flex>
-              <v-flex xs4>
+              <!-- <v-flex xs4>
                 <v-switch
                   row
                   color="success"
@@ -78,7 +78,7 @@
                   label="Impresión automática ticket"
                   v-model="autoprint"
                 ></v-switch>
-              </v-flex>
+              </v-flex> -->
             </v-layout>
             <v-layout wrap v-else>
               <v-flex xs4>
@@ -104,12 +104,12 @@
         </v-card-text>
       </v-form>
     </v-card>
-    <v-dialog v-model="dialog" max-width="480" persistent>
+    <div v-show="false" v-if="printContainer">
       <v-card>
         <v-card-title class="headline">
           <v-icon>print</v-icon> Boletas
           <v-spacer></v-spacer>
-          <v-btn @click="dialog = false"><v-icon>close</v-icon> Cerrar</v-btn>
+          <v-btn @click="printContainer = false"><v-icon>close</v-icon> Cerrar</v-btn>
           <v-btn @click="print" color="primary" v-if="!contrato"><v-icon color="white">print</v-icon> Imprimir</v-btn>
         </v-card-title>
         <v-card-text class="pt-0">
@@ -150,7 +150,7 @@
           </div>
         </v-card-text>
       </v-card>
-    </v-dialog>
+    </div>
     <v-dialog v-model="dialog2" max-width="480" persistent>
       <v-card>
         <v-card-title class="headline">
@@ -251,7 +251,7 @@ export default {
   mixins: [ validate ],
   data () {
     return {
-      dialog: false,
+      printContainer: false,
       dialog2: false,
       barcode: null,
       tipo: 'ENTRADA',
@@ -298,11 +298,11 @@ export default {
             this.form.registro = barcode;
             setTimeout(() => {
               this.registrar();
-            }, 500);
+            }, 250);
           }
           this.chars = [];
           this.pressed = false;
-        }, 500);
+        }, 250);
       }
       this.pressed = true;
     }, false);
@@ -382,8 +382,7 @@ export default {
     registrar () {
       console.log('Enviando!');
       if (this.$refs && this.$refs.form && this.$refs.form.validate()) {
-        console.log('Es válido');
-        if (this.tipo === 'ENTRADA') {
+        if (this.tipo === 'ENTRADA') { // Registrando ENTRADA
           let data = Object.assign({}, this.form);
           delete data.registro;
           if (Array.isArray(data.placa) && data.placa[0]) {
@@ -423,12 +422,14 @@ export default {
                 });
               }
               this.data = movimiento;
-              this.dialog = true;
-              if (this.autoprint) {
+
+              this.printContainer = false;
+              this.$nextTick(() => {
+                this.printContainer = true;
                 setTimeout(() => {
                   this.print();
-                }, 500);
-              }
+                }, 100);
+              });
               this.$message.success();
             }
           });

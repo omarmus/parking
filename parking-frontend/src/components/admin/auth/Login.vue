@@ -2,7 +2,7 @@
   <section>
     <div class="login-container">
       <!-- <div class="logo-app"></div> -->
-      <h1>Parking</h1>
+      <h1><v-icon>directions_car</v-icon> Parking</h1>
       <v-card class="login-form">
         <v-form
           @submit.prevent="submit"
