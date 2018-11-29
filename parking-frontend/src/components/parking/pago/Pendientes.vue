@@ -2,7 +2,7 @@
   <v-card flat>
     <v-card-text>
       <crud-table
-        v-if="fecha"
+        v-if="fecha || placa"
         :url="url"
         :headers="headers"
         :graphql="graphql"
@@ -13,6 +13,12 @@
         :show-filter="true"
       >
         <template slot="items" slot-scope="items">
+          <td v-if="placa">
+            <v-btn color="success" @click="pagoManual(items.item.id)">
+              <v-icon>check</v-icon>
+              Pagar
+            </v-btn>
+          </td>
           <td class="text-xs-right">{{ $util.pad(items.item.id, 10) }}</td>
           <td>{{ items.item.vehiculo_placa }}</td>
           <td>{{ $datetime.format(items.item.fecha_llegada) }}</td>
@@ -44,11 +50,59 @@ export default {
     fecha: {
       type: String,
       default: null
+    },
+    placa: {
+      type: String,
+      default: null
+    },
+    callback: {
+      type: Function,
+      default: null
     }
   },
   mounted () {
+    this.filters = [
+      {
+        field: 'pendientes',
+        type: 'hidden',
+        typeG: 'Boolean',
+        value: true
+      },
+      {
+        field: 'fecha_llegada',
+        type: 'hidden',
+        typeG: 'String'
+      },
+      {
+        field: 'id',
+        label: 'Número de ticket',
+        type: 'text',
+        typeG: 'String'
+      },
+      {
+        field: 'placa',
+        label: 'Placa',
+        type: 'text',
+        typeG: 'String'
+      }
+    ];
+
+    this.headers = [
+      { text: 'Nro. Ticket', value: 'id' },
+      { text: 'Placa', value: 'id_vehiculo' },
+      { text: 'Fecha de llegada', value: 'fecha_llegada' },
+      { text: 'Hora llegada', value: 'hora_llegada' },
+      { text: 'Llave', value: 'llave' },
+      { text: 'Estado', value: 'estado' }
+    ];
+
     if (this.fecha) {
       this.filters[1].value = this.fecha;
+    }
+    if (this.placa) {
+      this.filters[3].value = this.placa;
+      this.filters[3].type = 'hidden';
+      this.headers.unshift({ text: 'Pagar', sortable: false });
     }
   },
   mixins: [ crud ],
@@ -64,41 +118,17 @@ export default {
         llave
         estado
       `,
-      headers: [
-        { text: 'Nro. Ticket', value: 'id' },
-        { text: 'Placa', value: 'id_vehiculo' },
-        { text: 'Fecha de llegada', value: 'fecha_llegada' },
-        { text: 'Hora llegada', value: 'hora_llegada' },
-        { text: 'Llave', value: 'llave' },
-        { text: 'Estado', value: 'estado' }
-      ],
-      filters: [
-        {
-          field: 'pendientes',
-          type: 'hidden',
-          typeG: 'Boolean',
-          value: true
-        },
-        {
-          field: 'fecha_llegada',
-          type: 'hidden',
-          typeG: 'String'
-        },
-        {
-          field: 'id',
-          label: 'Número de ticket',
-          type: 'text',
-          typeG: 'String'
-        },
-        {
-          field: 'placa',
-          label: 'Placa',
-          type: 'text',
-          typeG: 'String'
-        }
-      ],
+      headers: [],
+      filters: [],
       order: [ 'fecha_llegada', 'DESC' ]
     };
+  },
+  methods: {
+    pagoManual (id) {
+      if (this.callback) {
+        this.callback(id);
+      }
+    }
   },
   watch: {
     fecha () {

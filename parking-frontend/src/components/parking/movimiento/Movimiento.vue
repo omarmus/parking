@@ -30,31 +30,13 @@
           <v-container grid-list-xl fluid class="pt-0">
             <v-layout wrap v-if="tipo === 'ENTRADA'">
               <v-flex xs4>
-                <v-select
-                  :loading="loading"
-                  :items="items"
-                  :rules="$validate(['required'])"
-                  :search-input.sync="search"
-                  v-model="form.placa"
+                <v-text-field
                   label="Placa"
-                  autocomplete
-                  cache-items
-                  :multiple="false"
-                  combobox
                   required
+                  :rules="$validate(['required'])"
+                  v-model="form.placa"
                   class="uppercase"
-                >
-                  <template slot="selection" slot-scope="data">
-                    <v-chip
-                      class="uppercase"
-                      :selected="data.selected"
-                      close
-                      @input="remove(data.item)"
-                    >
-                      <strong>{{ data.item }}</strong>
-                    </v-chip>
-                  </template>
-                </v-select>
+                ></v-text-field>
               </v-flex>
               <v-flex xs2 class="checkbox-space">
                 <v-checkbox
@@ -115,17 +97,26 @@
         <v-card-text class="pt-0">
           <div id="boleta" v-if="barcode">
             <div class="boleta elevation-1">
-              <h3>ORIGINAL</h3>
-              <div class="boleta-barcode">
-                <barcode :value="barcode">
-                  No se pudo generar el código de barras.
-                </barcode>
-              </div>
-              <p><strong>Fecha:</strong> {{ $datetime.format(data.fecha_llegada) }} <strong>Hora:</strong> {{ data.hora_llegada }}</p>
-              <p><strong>Dejó llave:</strong> {{ data.llave ? 'SI' : 'NO' }}</p>
-              <p><strong>PLACA:</strong> {{ data.vehiculo_placa }}</p>
+              <table class="table-barcode">
+                <tr>
+                  <td>
+                    <div class="boleta-barcode">
+                      <barcode :value="barcode">
+                        No se pudo generar el código de barras.
+                      </barcode>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="boleta-detalle">
+                      <p><strong>Fecha:</strong> {{ $datetime.format(data.fecha_llegada) }} <strong>Hora:</strong> {{ data.hora_llegada }}</p>
+                      <p><strong>Dejó llave:</strong> {{ data.llave ? 'SI' : 'NO' }}</p>
+                      <p><strong>PLACA:</strong> {{ data.vehiculo_placa }}</p>
+                    </div>
+                  </td>
+                </tr>
+              </table>
             </div>
-            <hr class="barcode-line">
+            <!-- <hr class="barcode-line">
             <div class="boleta elevation-1">
               <h3>COPIA</h3>
               <div class="boleta-barcode">
@@ -136,7 +127,7 @@
               <p><strong>Fecha:</strong> {{ $datetime.format(data.fecha_llegada) }} <strong>Hora:</strong> {{ data.hora_llegada }}</p>
               <p><strong>Dejó llave:</strong> {{ data.llave ? 'SI' : 'NO' }}</p>
               <p><strong>PLACA:</strong> {{ data.vehiculo_placa }}</p>
-            </div>
+            </div> -->
           </div>
           <div v-else>
             <div v-if="contrato" class="boleta contrato">
@@ -151,6 +142,64 @@
         </v-card-text>
       </v-card>
     </div>
+    <v-form
+      ref="formS"
+      v-model="validS"
+      :submit.prevent="buscarVehiculo"
+      lazy-loading>
+      <v-card class="mt-5">
+        <v-card-title class="info">
+          <v-icon dark>search</v-icon> <span class="white--text">Pagar manualmente</span>
+        </v-card-title>
+        <v-card-text class="pb-0">
+          <v-layout wrap>
+            <v-flex xs4>
+              <v-select
+                :loading="loading"
+                :items="items"
+                :rules="$validate(['required'])"
+                :search-input.sync="search"
+                v-model="formS.placa"
+                label="Placa"
+                autocomplete
+                cache-items
+                placeholder="Ingrese la placa a buscar"
+                :multiple="false"
+                combobox
+                required
+                class="uppercase"
+              >
+                <template slot="selection" slot-scope="data">
+                  <v-chip
+                    class="uppercase"
+                    :selected="data.selected"
+                    close
+                    @input="remove3(data.item)"
+                  >
+                    <strong>{{ data.item }}</strong>
+                  </v-chip>
+                </template>
+              </v-select>
+            </v-flex>
+            <v-flex xs1></v-flex>
+            <v-flex xs3>
+              <v-btn
+                v-show="false"
+                large
+                type="submit"
+                color="primary">
+                <v-icon>search</v-icon> Buscar Vehículo
+              </v-btn>
+            </v-flex>
+          </v-layout>
+        </v-card-text>
+      </v-card>
+      <pendientes
+        v-if="showPendientes"
+        :placa="formS.placa"
+        :callback="registrarSalida">
+      </pendientes>
+    </v-form>
     <v-dialog v-model="dialog2" max-width="480" persistent>
       <v-card>
         <v-card-title class="headline">
@@ -185,7 +234,7 @@
                   class="uppercase"
                   :selected="data.selected"
                   close
-                  @input="remove2(data.item)"
+                  @input="e2(data.item)"
                 >
                   <strong>{{ data.item }}</strong>
                 </v-chip>
@@ -211,16 +260,29 @@
 <script>
 import VueBarcode from 'vue-barcode';
 import Reloj from '@/components/parking/movimiento/Reloj';
+import Pendientes from '@/components/parking/pago/Pendientes';
 import validate from '@/common/mixins/validate';
 
 const css = `
 @media print {
   .boleta {
     font-family: Arial, Helvetica, sans-serif;
-    padding: 20px 20px 15px;
+    padding: 5px 10px 5px;
     width: 100%;
-    max-width: 250px;
+    max-width: 300px;
     margin: 0 auto 10px;
+  }
+  .boleta.contrato {
+    max-width: 100%;
+    padding: 5px;
+  }
+  .boleta .boleta-barcode {
+    text-align: center;
+    margin-top: -15px;
+    margin-bottom: -25px;
+  }
+  .boleta .vue-barcode-element {
+    width: 130px;
   }
   .boleta h3 {
     font-size: 1rem;
@@ -229,20 +291,28 @@ const css = `
     line-height: 1rem;
   }
   .boleta p {
-    margin: 0 0 5px;
+    margin: 0;
+    line-height: 20px;
   }
-  .boleta-barcode {
-    text-align: center;
-    margin-top: -15px;
-    margin-bottom: -10px;
-  }
-  .vue-barcode-element {
-    width: 160px;
-  }
+
   .barcode-line {
     border: none;
     border-top: 1px solid #ccc;
     margin-bottom: 10px;
+  }
+
+  .table-barcode {
+    border: none;
+    border-collapse: collapse;
+  }
+  .table-barcode td {
+    border: none;
+    padding: 0;
+    vertical-align: top;
+  }
+
+  .boleta-detalle {
+    margin: 12px 0 0 5px;
   }
 }
 `;
@@ -251,6 +321,9 @@ export default {
   mixins: [ validate ],
   data () {
     return {
+      showPendientes: false,
+      validS: true,
+      hover: false,
       printContainer: false,
       dialog2: false,
       barcode: null,
@@ -266,6 +339,9 @@ export default {
         id_pago: null,
         total: 0
       },
+      formS: {
+        placa: null
+      },
       focusP: false,
       focusR: false,
       loading: false,
@@ -276,11 +352,13 @@ export default {
       search2: null,
       valid: false,
       valid2: false,
+      validB: false,
       data: null,
       pressed: false,
       chars: [],
       contrato: false,
-      autoprint: true
+      autoprint: true,
+      placas: []
     };
   },
   mounted () {
@@ -311,6 +389,37 @@ export default {
     window.addEventListener('keypress', null, false);
   },
   methods: {
+    buscarVehiculo () {
+      this.$service.graphql({
+        query: `
+          query busqueda {
+            movimientos(placa: "${this.formS.placa}", pendientes: true) {
+              count
+              rows {
+                id
+                vehiculo_placa
+                fecha_llegada
+                hora_llegada
+                fecha_salida
+                hora_salida
+                llave
+                estado
+                pago_fecha
+                pago_total
+                pago_gestion
+                pago_estado
+              }
+            }
+          }
+        `,
+        variables: {}
+      }).then(response => {
+        if (response) {
+          let movimientos = response.movimientos.rows;
+          this.$util.csv(this.createData(movimientos), this.headersCsv);
+        }
+      });
+    },
     getPlacas (placa) {
       this.loading = true;
       this.$service.graphql({
@@ -379,6 +488,9 @@ export default {
     remove2 (item) {
       this.form2.nit = null;
     },
+    remove3 (item) {
+      this.formS.placa = null;
+    },
     registrar () {
       console.log('Enviando!');
       if (this.$refs && this.$refs.form && this.$refs.form.validate()) {
@@ -434,44 +546,48 @@ export default {
             }
           });
         } else { // SALIDA
-          console.log('Enviando salida');
-          this.$service.graphql({
-            query: `
-              mutation edit($id: Int!, $movimiento: EditMovimiento!) {
-                movimientoEdit(id: $id, movimiento: $movimiento) {
-                  id
-                  estado
-                  total
-                  id_pago
-                  vehiculo_placa
-                }
-              }
-            `,
-            variables: {
-              id: parseInt(this.form.registro),
-              movimiento: {}
-            }
-          }).then(response => {
-            if (response) {
-              this.form.registro = '';
-              let movimiento = response.movimientoEdit;
-              if ((movimiento.estado === 'SALIDA' || movimiento.estado === 'POR_PAGAR') && movimiento.id_pago) {
-                this.dialog2 = true;
-                this.form2 = {
-                  id: movimiento.id,
-                  id_pago: movimiento.id_pago,
-                  total: movimiento.total,
-                  placa: movimiento.vehiculo_placa,
-                  id_movimiento: movimiento.id
-                };
-                this.$message.success();
-              } else {
-                this.$message.warning('Ya se realizó el registro anteriormente.');
-              }
-            }
-          });
+          this.registrarSalida();
         }
       }
+    },
+    registrarSalida (id) {
+      console.log('Enviando salida');
+      this.$service.graphql({
+        query: `
+          mutation edit($id: Int!, $movimiento: EditMovimiento!) {
+            movimientoEdit(id: $id, movimiento: $movimiento) {
+              id
+              estado
+              total
+              id_pago
+              vehiculo_placa
+            }
+          }
+        `,
+        variables: {
+          id: parseInt(id || this.form.registro),
+          movimiento: {}
+        }
+      }).then(response => {
+        if (response) {
+          this.form.registro = '';
+          let movimiento = response.movimientoEdit;
+          if ((movimiento.estado === 'SALIDA' || movimiento.estado === 'POR_PAGAR') && movimiento.id_pago) {
+            this.dialog2 = true;
+            this.form2 = {
+              id: movimiento.id,
+              id_pago: movimiento.id_pago,
+              total: movimiento.total,
+              placa: movimiento.vehiculo_placa,
+              id_movimiento: movimiento.id
+            };
+            this.formS.placa = null;
+            this.$message.success();
+          } else {
+            this.$message.warning('Ya se realizó el registro anteriormente.');
+          }
+        }
+      });
     },
     print () {
       let html = document.getElementById('boleta').innerHTML;
@@ -521,7 +637,7 @@ export default {
     search2 (val) {
       val && this.getNits(val);
     },
-    'form2.nit': function (val) {
+    'form2.nit' (val) {
       console.log('select NIT', val);
       for (let i in this.items2) {
         if (val === this.items2[i].value) {
@@ -529,72 +645,22 @@ export default {
           break;
         }
       }
+    },
+    'formS.placa' (val) {
+      this.showPendientes = false;
+      this.$nextTick(() => {
+        if (val) {
+          this.showPendientes = true;
+        }
+      });
     }
   },
   components: {
     barcode: VueBarcode,
-    Reloj
+    Reloj,
+    Pendientes
   }
 };
 </script>
 
-<style lang="scss">
-.checkbox-space {
-  .checkbox {
-    padding-top: 25px;
-    min-width: auto;
-  }
-}
-.in-out {
-  .radio {
-    label {
-      color: white !important;
-      font-weight: 600;
-      font-size: 1.4rem;
-      line-height: 24px;
-    }
-  }
-}
-.boleta {
-  padding: 20px 20px 15px;
-  width: 100%;
-  max-width: 280px;
-  margin: 0 auto 10px;
-
-  &.contrato {
-    max-width: 100%;
-    padding: 5px;
-  }
-
-  .boleta-barcode {
-    text-align: center;
-    margin-top: -15px;
-    margin-bottom: -10px;
-  }
-
-  .vue-barcode-element {
-    width: 160px;
-  }
-
-  h3 {
-    font-size: 1rem;
-    margin: 0;
-    text-align: center;
-    line-height: 1rem;
-  }
-
-  p {
-    margin: 0 0 2px;
-  }
-
-}
-.barcode-line {
-  border: none;
-  border-top: 1px solid #ccc;
-  margin-bottom: 10px;
-}
-.autoprint {
-  margin-top: 12px;
-  margin-left: 20px;
-}
-</style>
+<style lang="scss" src="./movimiento.scss"></style>

@@ -1,0 +1,78 @@
+.checkbox-space {
+  .checkbox {
+    padding-top: 25px;
+    min-width: auto;
+  }
+}
+.in-out {
+  .radio {
+    label {
+      color: white !important;
+      font-weight: 600;
+      font-size: 1.4rem;
+      line-height: 24px;
+    }
+  }
+}
+
+// INICIO boleta
+.boleta {
+  padding: 5px 10px 5px;
+  width: 100%;
+  max-width: 300px;
+  margin: 0 auto 10px;
+
+  &.contrato {
+    max-width: 100%;
+    padding: 5px;
+  }
+
+  .boleta-barcode {
+    text-align: center;
+    margin-top: -15px;
+    margin-bottom: -25px;
+  }
+
+  .vue-barcode-element {
+    width: 130px;
+  }
+
+  h3 {
+    font-size: 1rem;
+    margin: 0;
+    text-align: center;
+    line-height: 1rem;
+  }
+
+  p {
+    margin: 0;
+    line-height: 20px;
+  }
+
+}
+.barcode-line {
+  border: none;
+  border-top: 1px solid #ccc;
+  margin-bottom: 10px;
+}
+
+.table-barcode {
+  border: none;
+  border-collapse: collapse;
+
+  td {
+    border: none;
+    padding: 0;
+    vertical-align: top;
+  }
+}
+
+.boleta-detalle {
+  margin: 12px 0 0 5px;
+}
+// FIN boleta
+
+.autoprint {
+  margin-top: 12px;
+  margin-left: 20px;
+}
