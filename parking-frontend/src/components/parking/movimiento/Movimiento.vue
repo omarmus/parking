@@ -267,9 +267,10 @@ const css = `
 @media print {
   .boleta {
     font-family: Arial, Helvetica, sans-serif;
-    padding: 5px 10px 5px;
+    font-size: 12px;
+    padding: 0;
     width: 100%;
-    max-width: 300px;
+    max-width: 350px;
     margin: 0 auto 10px;
   }
   .boleta.contrato {
@@ -278,11 +279,12 @@ const css = `
   }
   .boleta .boleta-barcode {
     text-align: center;
+    margin-left: -10px;
     margin-top: -15px;
     margin-bottom: -25px;
   }
   .boleta .vue-barcode-element {
-    width: 130px;
+    width: 150px;
   }
   .boleta h3 {
     font-size: 1rem;
@@ -292,7 +294,7 @@ const css = `
   }
   .boleta p {
     margin: 0;
-    line-height: 20px;
+    line-height: 15px;
   }
 
   .barcode-line {
@@ -312,7 +314,7 @@ const css = `
   }
 
   .boleta-detalle {
-    margin: 12px 0 0 5px;
+    margin: 12px 0 0 0;
   }
 }
 `;
