@@ -18,13 +18,22 @@ export default {
     };
   },
   mounted () {
-    this.timerID = window.setInterval(this.updateTime, 1000);
-    this.updateTime();
+    this.initHour();
   },
   destroyed () {
     window.clearInterval(this.timerID);
   },
   methods: {
+    initHour () {
+      this.$service.get('system/hora')
+      .then(response => {
+        const fecha = response.fecha.split('-');
+        const hora = response.hora.split(':');
+        this.now = new Date(fecha[0], fecha[1] - 1, fecha[2], hora[0], hora[1], hora[2]);
+        this.timerID = window.setInterval(this.updateTime, 1000);
+        this.updateTime();
+      });
+    },
     zeroPadding (num, digit) {
       let zero = '';
       for (var i = 0; i < digit; i++) {
@@ -33,9 +42,12 @@ export default {
       return (zero + num).slice(-digit);
     },
     updateTime () {
-      var cd = new Date();
-      this.time = this.zeroPadding(cd.getHours(), 2) + ':' + this.zeroPadding(cd.getMinutes(), 2) + ':' + this.zeroPadding(cd.getSeconds(), 2);
-      this.date = week[cd.getDay()] + ' ' + this.zeroPadding(cd.getDate(), 2) + '/' + this.zeroPadding(cd.getMonth() + 1, 2) + '/' + this.zeroPadding(cd.getFullYear(), 4);
+      if (this.now) {
+        var cd = this.now;
+        this.now = new Date(this.$datetime.addSeconds(this.now, 1));
+        this.time = this.zeroPadding(cd.getHours(), 2) + ':' + this.zeroPadding(cd.getMinutes(), 2) + ':' + this.zeroPadding(cd.getSeconds(), 2);
+        this.date = week[cd.getDay()] + ' ' + this.zeroPadding(cd.getDate(), 2) + '/' + this.zeroPadding(cd.getMonth() + 1, 2) + '/' + this.zeroPadding(cd.getFullYear(), 4);
+      }
     }
   }
 };

@@ -87,6 +87,15 @@ module.exports = function setupUsuario (api, services) {
     }
   });
 
+  api.get('/hora', async function obtenerHora (req, res, next) {
+    const now = moment();
+    debug('Obteniendo hora', now.format('DD/MM/YYYY'), now.format('HH:mm'));
+    res.send({
+      fecha: now.format('YYYY-MM-DD'),
+      hora: now.format('HH:mm:ss')
+    });
+  });
+
   api.get('/menu', guard.check(['modulos:read']), async function obtenerMenu (req, res, next) {
     debug('Obteniendo menú y permisos');
     const { Modulo, Parametro } = services;

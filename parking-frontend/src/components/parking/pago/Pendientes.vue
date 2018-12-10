@@ -21,7 +21,17 @@
           </td>
           <td class="text-xs-right">{{ $util.pad(items.item.id, 10) }}</td>
           <td>{{ items.item.vehiculo_placa }}</td>
-          <td>{{ $datetime.format(items.item.fecha_llegada) }}</td>
+          <td>
+            <v-chip
+              label
+              small
+              color="primary"
+              text-color="white"
+              v-if="$datetime.format(items.item.fecha_llegada) === now">
+              HOY
+            </v-chip>
+            <span v-else>{{ $datetime.format(items.item.fecha_llegada) }}</span>
+          </td>
           <td>{{ items.item.hora_llegada }}</td>
           <td>
             <v-icon v-if="items.item.llave" color="success">check</v-icon>
@@ -61,6 +71,7 @@ export default {
     }
   },
   mounted () {
+    this.initDate();
     this.filters = [
       {
         field: 'pendientes',
@@ -120,7 +131,8 @@ export default {
       `,
       headers: [],
       filters: [],
-      order: [ 'fecha_llegada', 'DESC' ]
+      order: [ 'fecha_llegada', 'DESC' ],
+      now: null
     };
   },
   methods: {
@@ -128,6 +140,13 @@ export default {
       if (this.callback) {
         this.callback(id);
       }
+    },
+    initDate () {
+      this.$service.get('system/hora')
+      .then(response => {
+        const fecha = response.fecha.split('-');
+        this.now = [fecha[2], fecha[1], fecha[0]].join('/');
+      });
     }
   },
   watch: {

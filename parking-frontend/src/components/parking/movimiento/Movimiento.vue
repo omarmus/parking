@@ -145,7 +145,7 @@
     <v-form
       ref="formS"
       v-model="validS"
-      :submit.prevent="buscarVehiculo"
+      @submit.prevent="buscarVehiculo"
       lazy-loading>
       <v-card class="mt-5">
         <v-card-title class="info">
@@ -497,6 +497,9 @@ export default {
       console.log('Enviando!');
       if (this.$refs && this.$refs.form && this.$refs.form.validate()) {
         if (this.tipo === 'ENTRADA') { // Registrando ENTRADA
+          if (this.$filter.empty(this.form.placa)) {
+            return false;
+          }
           let data = Object.assign({}, this.form);
           delete data.registro;
           if (Array.isArray(data.placa) && data.placa[0]) {
@@ -548,6 +551,9 @@ export default {
             }
           });
         } else { // SALIDA
+          if (this.$filter.empty(this.form.registro)) {
+            return false;
+          }
           this.registrarSalida();
         }
       }

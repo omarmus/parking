@@ -132,6 +132,14 @@ export default {
         return this.milliseconds(date) < this.addDays(new Date(), data);
       },
 
+      addSeconds (date, seconds) {
+        if (typeof date === 'number') {
+          return date + (seconds || 0) * 1000;
+        } else {
+          return this.milliseconds(date) + (seconds || 0) * 1000;
+        }
+      },
+
       addDays (date, days) {
         if (typeof date === 'number') {
           return date + (days || 0) * 24 * 60 * 60 * 1000;
@@ -405,7 +413,7 @@ export default {
       },
 
       betweenTwoDates (date1, date2, type, absolute) {
-        let types = {s: 1000, i: 60 * 1000, h: 60 * 60 * 1000, d: 24 * 60 * 60 * 1000};
+        let types = { s: 1000, i: 60 * 1000, h: 60 * 60 * 1000, d: 24 * 60 * 60 * 1000 };
         let diff = parseInt((this.standar(date2).getTime() - this.standar(date1).getTime()) / types[type]);
 
         if (typeof absolute !== 'undefined' && absolute !== false) {
