@@ -72,7 +72,7 @@ module.exports = function movimientoService (repositories, res) {
 
         // Asignando fecha y hora de llegada
         data.fecha_llegada = moment().format('YYYY-MM-DD');
-        data.hora_llegada = moment().format('HH:mm:ss');
+        data.hora_llegada = moment().format('HH:mm');
 
         // Comprobando que exista un contrato
         let contratoItem = await contratos.findAll({ id_vehiculo: data.id_vehiculo });
@@ -99,7 +99,7 @@ module.exports = function movimientoService (repositories, res) {
 
             // Asignando fecha y hora de salida
             data.fecha_salida = moment().format('YYYY-MM-DD');
-            data.hora_salida = moment().format('HH:mm:ss');
+            data.hora_salida = moment().format('HH:mm');
 
             // Creando/Actualizando pago
             let costo = await Pago.calcularTotal(moment(item.fecha_llegada).format('YYYY-MM-DD'), item.hora_llegada, data.fecha_salida, data.hora_salida);
