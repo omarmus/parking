@@ -101,11 +101,15 @@
                 <tr>
                   <td>
                     <div class="boleta-barcode">
-                      <barcode :value="barcode">
+                      <barcode
+                        :value="barcode"
+                        height="50">
                         No se pudo generar el código de barras.
                       </barcode>
                     </div>
                   </td>
+                </tr>
+                <tr>
                   <td>
                     <div class="boleta-detalle">
                       <p><strong>Fecha:</strong> {{ $datetime.format(data.fecha_llegada) }} <strong>Hora:</strong> {{ data.hora_llegada }}</p>
@@ -279,12 +283,10 @@ const css = `
   }
   .boleta .boleta-barcode {
     text-align: center;
-    margin-left: -10px;
-    margin-top: -15px;
-    margin-bottom: -25px;
+    margin-bottom: -15px;
   }
   .boleta .vue-barcode-element {
-    width: 150px;
+    width: 200px;
   }
   .boleta h3 {
     font-size: 1rem;
@@ -306,6 +308,7 @@ const css = `
   .table-barcode {
     border: none;
     border-collapse: collapse;
+    width: 100%;
   }
   .table-barcode td {
     border: none;

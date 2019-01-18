@@ -29,12 +29,11 @@
 
   .boleta-barcode {
     text-align: center;
-    margin-top: -15px;
-    margin-bottom: -25px;
+    margin-bottom: -15px;
   }
 
   .vue-barcode-element {
-    width: 130px;
+    width: 200px;
   }
 
   h3 {
@@ -59,6 +58,7 @@
 .table-barcode {
   border: none;
   border-collapse: collapse;
+  width: 100%;
 
   td {
     border: none;
