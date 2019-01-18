@@ -103,6 +103,10 @@ module.exports = function movimientoService (repositories, res) {
 
             // Creando/Actualizando pago
             let costo = await Pago.calcularTotal(moment(item.fecha_llegada).format('YYYY-MM-DD'), item.hora_llegada, data.fecha_salida, data.hora_salida);
+            console.log('COSTO =========', costo);
+            if (costo.code === -1) {
+              return res.error(new Error(costo.data.message || costo.data));
+            }
             let pago = await pagos.createOrUpdate({
               id: item.id_pago,
               id_usuario: data._user_updated,

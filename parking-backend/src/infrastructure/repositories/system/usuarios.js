@@ -19,7 +19,7 @@ module.exports = function usuariosRepository (models, Sequelize) {
         as: 'rol'
       },
       {
-        attributes: ['nombre'],
+        attributes: ['nombre', 'direccion'],
         model: entidades,
         as: 'entidad'
       },
@@ -120,7 +120,7 @@ module.exports = function usuariosRepository (models, Sequelize) {
           as: 'rol'
         },
         {
-          attributes: ['nombre'],
+          attributes: ['nombre', 'direccion'],
           model: entidades,
           as: 'entidad'
         },
@@ -164,7 +164,7 @@ module.exports = function usuariosRepository (models, Sequelize) {
           as: 'rol'
         },
         {
-          attributes: ['nombre'],
+          attributes: ['nombre', 'direccion'],
           model: entidades,
           as: 'entidad'
         },

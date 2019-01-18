@@ -68,6 +68,7 @@ module.exports = async function setupApi (app, services) {
           'id_entidad': user.id_entidad,
           'id_rol': user.id_rol,
           'entidad': user['entidad.nombre'],
+          'entidad_direccion': user['entidad.direccion'],
           'rol': user['rol.nombre'],
           'lang': 'es'
         },

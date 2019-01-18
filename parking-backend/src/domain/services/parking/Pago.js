@@ -25,7 +25,7 @@ module.exports = function pagoService (repositories, res) {
   }
 
   async function calcularTotal (fechaInicio, horaInicio, fechaSalida, horaSalida) {
-    debug('Calculando total', horaInicio, horaSalida);
+    debug('Calculando total ============================', horaInicio, horaSalida);
     let total = 0;
     let minutos = diff(fechaInicio, horaInicio, fechaSalida, horaSalida);
     console.log('MINUTOS TOTAL', minutos);
@@ -33,6 +33,10 @@ module.exports = function pagoService (repositories, res) {
     let items = await tarifas.findAll({ gestion, order: 'minutos', estado: 'ACTIVO', turno: 'DIURNO' });
     items = items.rows;
     // console.log('items', items);
+
+    if (items.length === 0) {
+      return res.error(new Error(`No tiene registrado tarifas de la gestión ${gestion}, registrelas antes para poder realizar el pago.`));
+    }
     let maxMinutos = parseInt(items[items.length - 1].minutos);
     let maxPrecio = parseFloat(items[items.length - 1].precio);
 
