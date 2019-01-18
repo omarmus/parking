@@ -103,7 +103,7 @@
                     <div class="boleta-barcode">
                       <barcode
                         :value="barcode"
-                        height="50">
+                        height="45">
                         No se pudo generar el código de barras.
                       </barcode>
                     </div>
@@ -118,6 +118,13 @@
                     </div>
                   </td>
                 </tr>
+                <tfoot>
+                  <tr>
+                    <th class="boleta-footer">
+                      {{ $store.state.user.entidad }} - {{ $store.state.user.entidad_direccion }}
+                    </th>
+                  </tr>
+                </tfoot>
               </table>
             </div>
             <!-- <hr class="barcode-line">
@@ -320,6 +327,11 @@ const css = `
     margin: 12px 0 0 0;
   }
 }
+.boleta-footer {
+  padding-top: px;
+  font-size: .8rem;
+  font-weight: 400;
+}
 `;
 
 export default {
@@ -381,7 +393,7 @@ export default {
             this.form.registro = barcode;
             setTimeout(() => {
               this.registrar();
-            }, 250);
+            }, 500);
           }
           this.chars = [];
           this.pressed = false;
