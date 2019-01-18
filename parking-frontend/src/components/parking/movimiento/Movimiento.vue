@@ -3,37 +3,39 @@
     <h3 class="primary--text"><v-icon color="primary">home</v-icon> Entrada/Salida de Vehículos</h3>
     <v-card>
       <reloj></reloj>
-      <v-form
-        ref="form"
-        lazy-validation
-        v-model="valid"
-        @submit.prevent="registrar">
-        <v-card-text class="in-out" :class="{ 'success': tipo === 'ENTRADA', 'warning': tipo === 'SALIDA' }">
-          <v-container grid-list-xl fluid class="pt-0 pb-0">
-            <v-flex xs12>
-              <v-radio-group v-model="tipo" row>
-                <v-radio
-                  color="warning"
-                  label="ENTRADA VEHÍCULO"
-                  class="white--text"
-                  value="ENTRADA"></v-radio>
-                <v-radio
-                  color="red"
-                  label="SALIDA VEHÍCULO"
-                  class="white--text"
-                  value="SALIDA"></v-radio>
-              </v-radio-group>
-            </v-flex>
-          </v-container>
-        </v-card-text>
-        <v-card-text>
-          <v-container grid-list-xl fluid class="pt-0">
-            <v-layout wrap v-if="tipo === 'ENTRADA'">
+      <v-card-text class="in-out" :class="{ 'success': tipo === 'ENTRADA', 'warning': tipo === 'SALIDA' }">
+        <v-container grid-list-xl fluid class="pt-0 pb-0">
+          <v-flex xs12>
+            <v-radio-group v-model="tipo" row>
+              <v-radio
+                color="warning"
+                label="ENTRADA VEHÍCULO"
+                class="white--text"
+                value="ENTRADA"></v-radio>
+              <v-radio
+                color="red"
+                label="SALIDA VEHÍCULO"
+                class="white--text"
+                value="SALIDA"></v-radio>
+            </v-radio-group>
+          </v-flex>
+        </v-container>
+      </v-card-text>
+      <v-card-text>
+        <v-container grid-list-xl fluid class="pt-0">
+          <v-form
+            ref="form"
+            lazy-validation
+            v-model="valid"
+            v-if="tipo === 'ENTRADA'"
+            @submit.prevent="registrar">
+            <v-layout wrap>
               <v-flex xs4>
                 <v-text-field
                   label="Placa"
                   required
                   :rules="$validate(['required'])"
+                  ref="placa"
                   v-model="form.placa"
                   class="uppercase"
                 ></v-text-field>
@@ -62,12 +64,19 @@
                 ></v-switch>
               </v-flex> -->
             </v-layout>
-            <v-layout wrap v-else>
+          </v-form>
+          <v-form
+            ref="formSalida"
+            lazy-validation
+            v-model="valid"
+            v-else
+            @submit.prevent="registrarSalida">
+            <v-layout wrap>
               <v-flex xs4>
                 <v-text-field
                   label="Número de registro"
                   v-model="form.registro"
-                  :autofocus="focusR"
+                  ref="registro"
                   :rules="$validate(['required'])"
                   required
                   maxlength="10"
@@ -82,9 +91,9 @@
                 </v-btn>
               </v-flex>
             </v-layout>
-          </v-container>
-        </v-card-text>
-      </v-form>
+          </v-form>
+        </v-container>
+      </v-card-text>
     </v-card>
     <div v-show="false" v-if="printContainer">
       <v-card>
@@ -154,7 +163,7 @@
       </v-card>
     </div>
     <v-form
-      ref="formS"
+      ref="2"
       v-model="validS"
       @submit.prevent="buscarVehiculo"
       lazy-loading>
@@ -359,8 +368,6 @@ export default {
       formS: {
         placa: null
       },
-      focusP: false,
-      focusR: false,
       loading: false,
       loading2: false,
       items: [],
@@ -379,33 +386,43 @@ export default {
     };
   },
   mounted () {
-    window.addEventListener('keypress', e => {
-      if (e.which >= 48 && e.which <= 57) {
-        this.chars.push(String.fromCharCode(e.which));
-      }
-      console.log(e.which + ':' + this.chars.join('|'));
-      if (this.pressed === false) {
-        setTimeout(() => {
-          if (this.chars.length >= 8) {
-            this.tipo = 'SALIDA';
-            var barcode = this.chars.join('');
-            console.log('Barcode Scanned: ' + barcode);
-            this.form.registro = barcode;
-            setTimeout(() => {
-              this.registrar();
-            }, 500);
-          }
-          this.chars = [];
-          this.pressed = false;
-        }, 250);
-      }
-      this.pressed = true;
-    }, false);
+    this.leerBarcode();
+    this.focusPlaca();
   },
   destroy () {
     window.addEventListener('keypress', null, false);
   },
   methods: {
+    focusPlaca () {
+      setTimeout(() => {
+        this.$refs.placa.focus();
+      }, 200);
+    },
+    leerBarcode () {
+      window.addEventListener('keypress', e => {
+        if (e.which >= 48 && e.which <= 57) {
+          this.chars.push(String.fromCharCode(e.which));
+        }
+        console.log(e.which + ':' + this.chars.join('|'));
+        if (this.pressed === false) {
+          setTimeout(() => {
+            if (this.chars.length >= 8) {
+              this.form.placa = '';
+              this.tipo = 'SALIDA';
+              var barcode = this.chars.join('');
+              console.log('Barcode Scanned: ' + barcode);
+              this.form.registro = barcode;
+              setTimeout(() => {
+                this.registrarSalida();
+              }, 500);
+            }
+            this.chars = [];
+            this.pressed = false;
+          }, 250);
+        }
+        this.pressed = true;
+      }, false);
+    },
     buscarVehiculo () {
       this.$service.graphql({
         query: `
@@ -509,72 +526,71 @@ export default {
       this.formS.placa = null;
     },
     registrar () {
-      console.log('Enviando!');
+      console.log('Registrando ingreso!');
       if (this.$refs && this.$refs.form && this.$refs.form.validate()) {
-        if (this.tipo === 'ENTRADA') { // Registrando ENTRADA
-          if (this.$filter.empty(this.form.placa)) {
-            return false;
-          }
-          let data = Object.assign({}, this.form);
-          delete data.registro;
-          if (Array.isArray(data.placa) && data.placa[0]) {
-            data.placa = data.placa[0];
-          }
-          data.placa = data.placa.toUpperCase();
-          this.$service.graphql({
-            query: `
-              mutation add($movimiento: NewMovimiento!) {
-                movimientoAdd(movimiento: $movimiento) {
-                  id
-                  nuevo
-                  fecha_llegada
-                  hora_llegada
-                  llave
-                  vehiculo_placa
-                  contrato
-                }
-              }
-            `,
-            variables: {
-              movimiento: data
-            }
-          }).then(response => {
-            if (response && response.movimientoAdd) {
-              let movimiento = response.movimientoAdd;
-              this.form = {
-                registro: '',
-                placa: null,
-                llave: false
-              };
-              this.barcode = null;
-              this.contrato = movimiento.contrato;
-              if (!movimiento.contrato) {
-                this.$nextTick(() => {
-                  this.barcode = this.$util.pad(movimiento.id, 10);
-                });
-              }
-              this.data = movimiento;
-
-              this.printContainer = false;
-              this.$nextTick(() => {
-                this.printContainer = true;
-                setTimeout(() => {
-                  this.print();
-                }, 100);
-              });
-              this.$message.success();
-            }
-          });
-        } else { // SALIDA
-          if (this.$filter.empty(this.form.registro)) {
-            return false;
-          }
-          this.registrarSalida();
+        let data = Object.assign({}, this.form);
+        delete data.registro;
+        if (Array.isArray(data.placa) && data.placa[0]) {
+          data.placa = data.placa[0];
         }
+        data.placa = data.placa.toUpperCase();
+        this.$service.graphql({
+          query: `
+            mutation add($movimiento: NewMovimiento!) {
+              movimientoAdd(movimiento: $movimiento) {
+                id
+                nuevo
+                fecha_llegada
+                hora_llegada
+                llave
+                vehiculo_placa
+                contrato
+              }
+            }
+          `,
+          variables: {
+            movimiento: data
+          }
+        }).then(response => {
+          if (response && response.movimientoAdd) {
+            let movimiento = response.movimientoAdd;
+            this.form = {
+              registro: '',
+              placa: null,
+              llave: false
+            };
+            this.barcode = null;
+            this.contrato = movimiento.contrato;
+            if (!movimiento.contrato) {
+              this.$nextTick(() => {
+                this.barcode = this.$util.pad(movimiento.id, 10);
+              });
+            }
+            this.data = movimiento;
+
+            this.printContainer = false;
+            this.$nextTick(() => {
+              this.printContainer = true;
+              setTimeout(() => {
+                this.print();
+              }, 100);
+            });
+            this.$message.success();
+            this.focusPlaca();
+          }
+        });
       }
     },
     registrarSalida (id) {
-      console.log('Enviando salida');
+      console.log('Registrando salida', id);
+      if (typeof id === 'string' || typeof id === 'number') {
+        id = parseInt(id);
+      } else {
+        if (!(this.$refs && this.$refs.formSalida && this.$refs.formSalida.validate())) {
+          return false;
+        }
+        id = parseInt(this.form.registro);
+      }
       this.$service.graphql({
         query: `
           mutation edit($id: Int!, $movimiento: EditMovimiento!) {
@@ -588,7 +604,7 @@ export default {
           }
         `,
         variables: {
-          id: parseInt(id || this.form.registro),
+          id,
           movimiento: {}
         }
       }).then(response => {
@@ -638,6 +654,8 @@ export default {
           if (response) {
             this.$message.success('Se realizó el pago correspondiente');
             this.dialog2 = false;
+            this.tipo = 'ENTRADA';
+            this.focusPlaca();
           }
         });
       }
@@ -646,12 +664,12 @@ export default {
   watch: {
     tipo: function (val) {
       if (val === 'ENTRADA') {
-        this.focusP = true;
-        this.focusR = false;
+        this.focusPlaca();
       }
       if (val === 'SALIDA') {
-        this.focusP = false;
-        this.focusR = true;
+        setTimeout(() => {
+          this.$refs.registro.focus();
+        }, 200);
       }
     },
     search (val) {
