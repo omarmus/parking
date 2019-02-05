@@ -102,6 +102,12 @@ module.exports = function movimientoService (repositories, res) {
             data.hora_salida = moment().format('HH:mm');
 
             // Creando/Actualizando pago
+            console.log('OBTENIENDO DATOS PARA EL PAGO ===========================');
+            console.log('Fecha llegada:', data.fecha_llegada, moment(data.fecha_llegada).format('YYYY-MM-DD'));
+            console.log('Hora llegada:', data.hora_llegada);
+            console.log('Fecha Salida:', data.fecha_salida);
+            console.log('Hora llegada:', data.hora_salida);
+            console.log('===========================================');
             let costo = await Pago.calcularTotal(moment(data.fecha_llegada).format('YYYY-MM-DD'), item.hora_llegada, data.fecha_salida, data.hora_salida);
             console.log('COSTO TOTAL =========', costo);
             if (costo.code === -1) {
