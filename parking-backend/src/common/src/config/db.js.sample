@@ -8,7 +8,8 @@ const db = {
   password: process.env.DB_PASS || 'postgres',
   host: process.env.DB_HOST || 'localhost',
   dialect: 'postgres',
-  logging: s => debug(s)
+  logging: s => debug(s),
+  operatorsAliases: false
 };
 
 module.exports = db;
