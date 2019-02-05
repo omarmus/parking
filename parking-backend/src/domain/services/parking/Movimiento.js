@@ -103,7 +103,7 @@ module.exports = function movimientoService (repositories, res) {
 
             // Creando/Actualizando pago
             console.log('OBTENIENDO DATOS PARA EL PAGO ===========================');
-            console.log('Fecha llegada:', item.fecha_llegada, moment(item.fecha_llegada).format('YYYY-MM-DD'));
+            console.log('Fecha llegada:', item.fecha_llegada, moment(item.fecha_llegada).utc().format('YYYY-MM-DD'));
             console.log('Hora llegada:', item.hora_llegada);
             console.log('Fecha Salida:', data.fecha_salida);
             console.log('Hora llegada:', data.hora_salida);
