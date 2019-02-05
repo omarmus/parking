@@ -412,6 +412,7 @@ export default {
               var barcode = this.chars.join('');
               console.log('Barcode Scanned: ' + barcode);
               this.form.registro = barcode;
+              this.$storage.set('barcode', barcode);
               setTimeout(() => {
                 this.registrarSalida();
               }, 500);
@@ -534,6 +535,19 @@ export default {
           data.placa = data.placa[0];
         }
         data.placa = data.placa.toUpperCase();
+        console.log('PLACA A REGISTRAR', data.placa);
+        if (data.placa[0] === '0' && data.placa.length >= 10) {
+          this.form.placa = '';
+          this.tipo = 'SALIDA';
+          let barcode = this.$storage.get('barcode');
+          if (barcode && barcode.length) {
+            this.form.registro = barcode;
+          }
+          setTimeout(() => {
+            this.registrarSalida();
+          }, 500);
+          return false;
+        }
         this.$service.graphql({
           query: `
             mutation add($movimiento: NewMovimiento!) {
