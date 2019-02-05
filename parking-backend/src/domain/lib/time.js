@@ -6,8 +6,8 @@ function diff (fechaIni, horaIni, fechaFin, horaFin) {
   let ini = `${fechaIni} ${horaIni}`;
   let fin = `${fechaFin} ${horaFin}`;
 
-  // console.log('Fecha Ingreso: ', ini);
-  // console.log('Fecha Salida: ', fin);
+  console.log('Fecha Ingreso: ', ini);
+  console.log('Fecha Salida: ', fin);
 
   var ms = moment(fin, 'YYYY-MM-DD HH:mm:ss').diff(moment(ini, 'YYYY-MM-DD HH:mm:ss'));
   var d = moment.duration(ms);

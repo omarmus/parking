@@ -29,7 +29,7 @@ module.exports = function pagoService (repositories, res) {
     let total = 0;
     let print = null;
     let minutos = diff(fechaInicio, horaInicio, fechaSalida, horaSalida);
-    // console.log('MINUTOS TOTAL', minutos);
+    console.log('MINUTOS TOTAL', minutos);
     let gestion = moment().format('YYYY');
     let items = await tarifas.findAll({ gestion, order: 'minutos', estado: 'ACTIVO', turno: 'DIURNO' });
     items = items.rows;
@@ -41,11 +41,11 @@ module.exports = function pagoService (repositories, res) {
     let maxMinutos = parseInt(items[items.length - 1].minutos);
     let maxPrecio = parseFloat(items[items.length - 1].precio);
     let dias = Math.floor(minutos / maxMinutos);
-    // console.log('DÍAS', dias);
+    console.log('DÍAS', dias);
     total = dias * maxPrecio;
     if (dias > 0) {
       minutos = minutos % maxMinutos;
-      // console.log('MINUTOS RESTANTES', minutos);
+      console.log('MINUTOS RESTANTES', minutos);
     }
     for (let i in items) {
       // console.log('MINUTOS', items[i].minutos, 'PRECIO', items[i].precio);
@@ -53,7 +53,7 @@ module.exports = function pagoService (repositories, res) {
         continue;
       } else {
         total += parseFloat(items[i].precio);
-        // console.log('===============> MINUTOS', minutos, ' - TOTAL:', total, 'Bs.');
+        console.log('===============> MINUTOS', minutos, ' - TOTAL:', total, 'Bs.');
         // console.log(`${dias}, ${timeLiteral(minutos * 60)}, ${minutos}, ${total}`);
         print = [
           dias,
