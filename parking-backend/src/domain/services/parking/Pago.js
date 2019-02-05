@@ -1,7 +1,7 @@
 'use strict';
 
 const debug = require('debug')('app:service:pago');
-const { diff } = require('../../lib/time');
+const { diff, timeLiteral } = require('../../lib/time');
 const moment = require('moment');
 
 module.exports = function pagoService (repositories, res) {
@@ -25,10 +25,11 @@ module.exports = function pagoService (repositories, res) {
   }
 
   async function calcularTotal (fechaInicio, horaInicio, fechaSalida, horaSalida) {
-    debug('Calculando total ============================', horaInicio, horaSalida);
+    debug('Calculando total ============================', fechaInicio, horaInicio, ' - ', fechaSalida, horaSalida);
     let total = 0;
+    let print = null;
     let minutos = diff(fechaInicio, horaInicio, fechaSalida, horaSalida);
-    console.log('MINUTOS TOTAL', minutos);
+    // console.log('MINUTOS TOTAL', minutos);
     let gestion = moment().format('YYYY');
     let items = await tarifas.findAll({ gestion, order: 'minutos', estado: 'ACTIVO', turno: 'DIURNO' });
     items = items.rows;
@@ -39,23 +40,32 @@ module.exports = function pagoService (repositories, res) {
     }
     let maxMinutos = parseInt(items[items.length - 1].minutos);
     let maxPrecio = parseFloat(items[items.length - 1].precio);
-
-    console.log('DÍAS', Math.floor(minutos / maxMinutos));
-    total = Math.floor(minutos / maxMinutos) * maxPrecio;
-    if (minutos > maxMinutos) {
+    let dias = Math.floor(minutos / maxMinutos);
+    // console.log('DÍAS', dias);
+    total = dias * maxPrecio;
+    if (dias > 0) {
       minutos = minutos % maxMinutos;
+      // console.log('MINUTOS RESTANTES', minutos);
     }
-    console.log('MINUTOS RESTANTES', minutos);
     for (let i in items) {
-      console.log('MINUTOS', items[i].minutos, 'PRECIO', items[i].precio);
-      if (minutos <= items[i].minutos) {
+      // console.log('MINUTOS', items[i].minutos, 'PRECIO', items[i].precio);
+      if (minutos > items[i].minutos) {
+        continue;
+      } else {
         total += parseFloat(items[i].precio);
-        console.log('TOTAL!!!', total);
+        // console.log('===============> MINUTOS', minutos, ' - TOTAL:', total, 'Bs.');
+        // console.log(`${dias}, ${timeLiteral(minutos * 60)}, ${minutos}, ${total}`);
+        print = [
+          dias,
+          timeLiteral(minutos * 60),
+          minutos,
+          total
+        ];
         break;
       }
     }
 
-    return res.success({ total });
+    return res.success({ total, print });
   }
 
   async function findById (id) {

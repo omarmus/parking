@@ -2,13 +2,17 @@
 
 const moment = require('moment');
 
-function diff (fechaInicio, hourIni, fechaSalida, horaEnd) {
-  console.log('DATOS', fechaInicio, hourIni, fechaSalida, horaEnd);
-  let fechaIni = moment(`${fechaInicio} ${hourIni}`, 'YYYY-MM-DD HH:ss').add(1, 'days').valueOf();
-  let fechaFin = moment(`${fechaSalida} ${horaEnd}`, 'YYYY-MM-DD HH:ss').valueOf();
-  console.log(fechaIni, fechaFin);
+function diff (fechaIni, horaIni, fechaFin, horaFin) {
+  let ini = `${fechaIni} ${horaIni}`;
+  let fin = `${fechaFin} ${horaFin}`;
 
-  return Math.ceil((fechaFin - fechaIni) / 60000);
+  // console.log('Fecha Ingreso: ', ini);
+  // console.log('Fecha Salida: ', fin);
+
+  var ms = moment(fin, 'YYYY-MM-DD HH:mm:ss').diff(moment(ini, 'YYYY-MM-DD HH:mm:ss'));
+  var d = moment.duration(ms);
+
+  return d.asMinutes();
 }
 
 function transform (time) {
@@ -57,6 +61,42 @@ function milliseconds (date) {
   return new Date(date[0], date[1] - 1, date[2], 0, 0, 0).getTime();
 }
 
+function timeLiteral (time, txt) {
+  let text = '';
+  if (typeof time === 'number') {
+    if (time === 0) {
+      return '';
+    }
+    if (time < 60) {
+      text = time + 's';
+    } else if (time < 3600) {
+      text = Math.floor(time / 60) + 'm ' + (time % 60 > 0 ? (time % 60 + 's') : '');
+    } else {
+      text = Math.floor(time / 3600) + 'h ' + (time % 3600 > 0 ? (Math.floor((time - (3600 * Math.floor(time / 3600))) / 60) + 'm ') : '') + (time % 60 > 0 ? (time % 60 + 's') : '');
+    }
+    return (txt || '') + text;
+  } else {
+    if (time.length === 0) {
+      return '';
+    }
+    time = time.split(':');
+    let hours = time[0];
+    let minutes = time[1];
+
+    if (parseInt(hours) > 0) {
+      text += parseInt(hours) + 'h ';
+    }
+    if (parseInt(minutes) > 0) {
+      text += parseInt(minutes) + 'm ';
+    }
+    if (time.length === 3 && parseInt(time[2]) > 0) {
+      text += parseInt(time[2]) + 's';
+    }
+
+    return (txt || '') + text;
+  }
+}
+
 module.exports = {
   diff,
   transformDate,
@@ -64,5 +104,6 @@ module.exports = {
   addDays,
   formatTime,
   formatDate,
-  milliseconds
+  milliseconds,
+  timeLiteral
 };
