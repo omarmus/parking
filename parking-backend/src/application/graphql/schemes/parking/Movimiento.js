@@ -40,6 +40,8 @@ module.exports = `
     pago_gestion: Int
     # pago_estado
     pago_estado: EstadoPago
+    # usuario que actualizó
+    _user_updated: Int
   }
 
   # Tipos de estado del Movimiento

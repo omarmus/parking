@@ -8,7 +8,7 @@ module.exports = function setupResolver (services) {
   return {
     Query: {
       usuarios: async (_, args, context) => {
-        permissions(context, 'usuarios:read');
+        permissions(context, 'usuarios:read|movimientos:read');
 
         let lista = await Usuario.findAll(args, context.id_rol, context.id_entidad);
         return removeDots(lista.data);
