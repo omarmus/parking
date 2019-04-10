@@ -242,9 +242,11 @@ const Util = {
     });
     console.log('CSV', csvContent);
     let encodedUri = encodeURI(csvContent);
+    let now = new Date();
+    let file = `reporte-${now.getDate()}-${now.getMonth() + 1}-${now.getFullYear()}-hrs-${now.getHours()}-${now.getMinutes()}-${now.getSeconds()}.csv`;
     let link = document.createElement('a');
     link.setAttribute('href', encodedUri);
-    link.setAttribute('download', 'reporte.csv');
+    link.setAttribute('download', file);
     link.innerHTML = 'Click Here to download';
     document.body.appendChild(link); // Required for FF
     link.click();
