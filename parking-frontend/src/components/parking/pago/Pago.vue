@@ -121,7 +121,7 @@
                 >
                   <template slot="buttons">
                     <v-btn @click="pagosCsv()">
-                      <v-icon>print</v-icon> Descargar CSV
+                      <v-icon>print</v-icon> Generar reporte del día
                     </v-btn>
                   </template>
                   <template slot="labels">
@@ -155,22 +155,29 @@
                   </template>
                   <template slot="items" slot-scope="items">
                     <td class="text-xs-right">{{ $util.pad(items.item.id, 10) }}</td>
-                    <td>
+                    <!-- <td>
                       <v-chip label small color="success" text-color="white">
                         {{ items.item.estado }}
                       </v-chip>
-                    </td>
+                    </td> -->
                     <td>{{ items.item.vehiculo_placa }}</td>
-                    <td>{{ $datetime.format(items.item.pago_fecha, 'dd/MM/YYYY hrs. HH:mm') }}</td>
-                    <td class="text-xs-right">Bs. {{ items.item.pago_total }}</td>
-                    <td>{{ $datetime.format(items.item.fecha_llegada) }}</td>
-                    <td>{{ items.item.hora_llegada }}</td>
-                    <td>{{ $datetime.format(items.item.fecha_salida) }}</td>
-                    <td>{{ items.item.hora_salida }}</td>
+                    <td>
+                      {{ $datetime.format(items.item.fecha_llegada) }} <br>
+                      Hrs. {{ items.item.hora_llegada }}
+                    </td>
+                    <td>
+                      {{ $datetime.format(items.item.fecha_salida) }} <br>
+                      Hrs. {{ items.item.hora_salida }}
+                    </td>
                     <td>
                       <v-icon v-if="items.item.llave" color="success">check</v-icon>
                       <v-icon v-if="!items.item.llave" color="error">close</v-icon>
                     </td>
+                    <td>
+                      {{ $datetime.format(items.item.pago_fecha, 'dd/MM/YYYY') }} <br>
+                      Hrs. {{ $datetime.format(items.item.pago_fecha, 'HH:mm') }}
+                    </td>
+                    <td class="text-xs-right">Bs. {{ items.item.pago_total }}</td>
                   </template>
                 </crud-table>
               </v-card-text>
@@ -218,18 +225,17 @@ export default {
         pago_total
         pago_gestion
         pago_estado
+        _user_updated
       `,
       headers: [
         { text: 'Nro. Ticket', value: 'id' },
-        { text: 'Estado', value: 'estado' },
+        // { text: 'Estado', value: 'estado' },
         { text: 'Placa', value: 'id_vehiculo' },
+        { text: 'Llegada', value: 'fecha_llegada' },
+        { text: 'Salida', value: 'fecha_salida' },
+        { text: 'Llave', value: 'llave' },
         { text: 'Fecha de pago', value: 'fecha_llegada' },
-        { text: 'Total', value: 'fecha_llegada' },
-        { text: 'Fecha de llegada', value: 'fecha_llegada' },
-        { text: 'Hora llegada', value: 'hora_llegada' },
-        { text: 'Fecha de salida', value: 'fecha_salida' },
-        { text: 'Hora salida', value: 'hora_salida' },
-        { text: 'Llave', value: 'llave' }
+        { text: 'Total', value: 'fecha_llegada', align: 'right' }
       ],
       filters: [
         {
@@ -267,12 +273,13 @@ export default {
       headersCsv: [
         'TICKET',
         'PLACA',
-        'ESTADO',
-        'PAGO FECHA',
-        'PAGO TOTAL',
+        // 'ESTADO',
         'FECHA LLEGADA',
         'FECHA SALIDA',
-        'LLAVE'
+        'LLAVE',
+        'PAGO FECHA',
+        'PAGO TOTAL',
+        'PAGADO POR'
       ]
     };
   },
@@ -294,13 +301,21 @@ export default {
                   ${this.dataGraphql}
                 }
               }
+              usuarios {
+                count
+                rows {
+                  id
+                  usuario
+                }
+              }
             }
           `,
           variables: {}
         }).then(response => {
           if (response) {
             let movimientos = response.movimientos.rows;
-            this.$util.csv(this.createData(movimientos), this.headersCsv);
+            let usuarios = response.usuarios.rows;
+            this.$util.csv(this.createData(movimientos, usuarios), this.headersCsv);
           }
         });
       }
@@ -329,33 +344,50 @@ export default {
                 ${this.dataGraphql}
               }
             }
+            usuarios {
+              count
+              rows {
+                id
+                usuario
+              }
+            }
           }
         `,
         variables: {}
       }).then(response => {
         if (response) {
           let movimientos = response.movimientos.rows;
-          this.$util.csv(this.createData(movimientos), this.headersCsv);
+          let usuarios = response.usuarios.rows;
+          this.$util.csv(this.createData(movimientos, usuarios), this.headersCsv);
         }
       });
     },
-    createData (items) {
+    createUsers (items) {
+      let users = {};
+      items.map(item => {
+        users[item.id] = item.usuario;
+      });
+      return users;
+    },
+    createData (items, usuarios) {
+      usuarios = this.createUsers(usuarios);
       let rows = [];
       let total = 0;
       for (let i in items) {
         let fila = [];
         fila.push(this.$util.pad(items[i].id + '', 10));
         fila.push(items[i].vehiculo_placa);
-        fila.push(items[i].estado);
-        fila.push(this.$datetime.format(items[i].pago_fecha, 'dd/MM/YYYY hrs. HH:mm'));
-        fila.push('Bs.' + items[i].pago_total);
         fila.push(this.$datetime.format(items[i].fecha_llegada) + ' Hrs. ' + items[i].hora_llegada);
         fila.push(this.$datetime.format(items[i].fecha_salida) + ' Hrs. ' + items[i].hora_salida);
         fila.push(items[i].llave ? 'SI' : 'NO');
+        // fila.push(items[i].estado);
+        fila.push(this.$datetime.format(items[i].pago_fecha, 'dd/MM/YYYY hrs. HH:mm'));
+        fila.push('Bs.' + items[i].pago_total);
+        fila.push(usuarios[items[i]._user_updated]);
         rows.push(fila);
         total += parseFloat(items[i].pago_total);
       }
-      rows.push([`TOTAL: Bs. ${total}`]);
+      rows.push(['', '', '', '', '', 'TOTAL:', `Bs. ${total}`]);
       return rows;
     },
     seleccionarDia (fecha) {

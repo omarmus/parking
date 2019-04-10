@@ -79,8 +79,8 @@ const Util = {
   },
 
   fullscreen () {
-    if (!document.fullscreenElement &&    // alternative standard method
-        !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) {  // current working methods
+    if (!document.fullscreenElement && // alternative standard method
+        !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) { // current working methods
       if (document.documentElement.requestFullscreen) {
         document.documentElement.requestFullscreen();
       } else if (document.documentElement.msRequestFullscreen) {

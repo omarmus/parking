@@ -22,7 +22,7 @@
             </v-tooltip>
           </template>
 
-          <template slot="form" slot-scope="props">
+          <template slot="form">
             <v-card-title class="headline">
               <v-icon>{{ form.id ? 'person' : 'person_add' }}</v-icon> {{ id ? $t('user.crud.editUser') : $t('user.crud.addUser') }}
               <v-spacer></v-spacer>
